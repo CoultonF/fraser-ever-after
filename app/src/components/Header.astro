@@ -1,0 +1,20 @@
+---
+import { Image } from 'astro:assets';
+import floral from '../images/floral-2.png';
+---
+ 
+<header class="flex items-center text-white" style={`background-image: url(${floral})`} >
+  <div class="absolute inset-0 "></div>
+    <div class='absolute inset-0 z-0'>
+      <Image src={floral} alt="A bird sitting on a nest of eggs."/>
+    </div>
+  <div class="relative z-10 flex w-full mx-auto flex-col max-w-prose items-center pt-40">
+    <h1 class="text-4xl md:text-6xl text-black font-bold leading-tight mb-4">Save the Date</h1>
+    <p class="text-lg md:text-xl text-black mb-8">Join us as we celebrate our love</p>
+    <p class="text-sm text-black md:text-base">Sunday, August 11, 2024</p>
+    <p class="text-sm text-black md:text-base">Ceremony starts at 3:00 PM</p>
+    <a href="#" class="bg-white text-gray-800 hover:bg-gray-200 py-2 px-4 mt-4 inline-block rounded-full">RSVP Now</a>
+  </div>
+</header>
+
+

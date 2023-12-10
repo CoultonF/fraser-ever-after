@@ -1,0 +1,9 @@
+name = "api-fraser-ever-after"
+main = "src/index.ts"
+compatibility_date = "2023-12-06"
+account_id = "e335da0940211ba812ca4a60fa9277c9"
+workers_dev = true
+[[d1_databases]]
+binding = "DB"
+database_name = "FRASER_EVER_AFTER"
+database_id = "f658d2a3-2626-44e1-b896-9765a817c9d4"
