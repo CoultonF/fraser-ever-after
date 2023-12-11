@@ -1,3 +1,24 @@
 {
-  "extends": "astro/tsconfigs/strict"
+  "compilerOptions": {
+    "strict": true,
+    "moduleResolution": "Node16",
+    "module": "Node16",
+    "baseUrl": "/Users/coultonfraser/Code/fraser-ever-after/app",
+    "types": [
+      "astro/env"
+    ],
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    "plugins": [
+      {
+        "name": "@astrojs/ts-plugin"
+      }
+    ],
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
+  },
+  "extends": "astro/tsconfigs/strictest"
 }

@@ -1,0 +1,54 @@
+---
+const { invite } = Astro.params;
+import Navigation from '@/components/Navigation.astro';
+import '../../styles/base.css';
+import Header from '@/components/Header.astro'
+import {RsvpForm} from '@/components/RsvpForm.tsx'
+const getInvite = async () => {
+  const res = await fetch(`http://localhost:8787/api/invite/${invite}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  return await res.json();
+}
+const getRvsp = async () => {
+  const res = await fetch(`http://localhost:8787/api/rvsp/${invite}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+  return await res.json();
+}
+const inviteData = await getInvite();
+if(inviteData.length === 0) {
+  Astro.redirect('/');
+}
+const rvspData = await getRvsp();
+---
+<html lang="en" class="bg-paper">
+	<head>
+
+		<meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link href="../../dist/output.css" rel="stylesheet">
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Fraser Ever After</title>
+	</head>
+	<body class="flex flex-col">
+		<div class="w-full h-auto overflow-auto">
+			<Header />
+      <div class="flex flex-col border-y py-3 border-slate-500 pl-20">
+        <Navigation/>
+      </div>
+      <main class="flex flex-col items-center w-full px-10">
+        <RsvpForm inviteData={inviteData.at(0)} guestData={rvspData} client:load />
+      </main>
+		</div>
+	</body>
+</html>
+

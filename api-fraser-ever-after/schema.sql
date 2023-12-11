@@ -25,4 +25,4 @@ CREATE TABLE IF NOT EXISTS RSVP (
   dietary_restrictions TEXT,
   created_dt DATE
   );
--- INSERT INTO INVITE (invite_id, first_name, last_name, email, phone_number, guest_count, created_dt) VALUES ('fd0211d6-3e87-46d4-9376-12880296f670', 'Coulton', 'Fraser', 'cjrfraser@gmail.com', 4033055795,1,'2017-01-01');
+INSERT INTO INVITE (invite_id, first_name, last_name, email, phone_number, guest_count, created_dt) VALUES ('fd0211d6-3e87-46d4-9376-12880296f670', 'Coulton', 'Fraser', 'cjrfraser@gmail.com', 4033055795,1,'2017-01-01');

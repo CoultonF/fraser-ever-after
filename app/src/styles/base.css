@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: Handwritten;
+    src: url('../../public/fonts/SendFlowers-Regular.ttf');
+    font-weight: 400;
+  }
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  @apply my-0 flex h-auto w-full flex-col scroll-smooth text-base antialiased;
+}
+
+body {
+  @apply flex w-full flex-col;
+}

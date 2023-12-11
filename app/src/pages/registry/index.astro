@@ -1,8 +1,9 @@
 ---
 import Home from '@/components/Home.astro';
 import Menu from '@/components/Menu.astro';
-import Header from '../components/Header.astro'
-import '../styles/base.css';
+import Donate from '@/components/Donate.astro';
+import Header from '@/components/Header.astro'
+import '../../styles/base.css';
 ---
 
 <html lang="en" class="bg-paper">
@@ -18,7 +19,7 @@ import '../styles/base.css';
 		<div class="w-full h-auto overflow-auto">
 			<Header />
 			<Menu/>
-			<Home />
+      <Donate />
 		</div>
 	</body>
 </html>

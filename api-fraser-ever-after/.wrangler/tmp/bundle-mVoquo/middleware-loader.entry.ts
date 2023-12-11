@@ -11,10 +11,10 @@ import {
 	__facade_register__,
 } from "/opt/homebrew/lib/node_modules/wrangler/templates/middleware/common.ts";
 
-import worker from "/Users/coultonfraser/Code/fraser-ever-after/api-fraser-ever-after/.wrangler/tmp/bundle-zQ3odt/middleware-insertion-facade.js";
+import worker from "/Users/coultonfraser/Code/fraser-ever-after/api-fraser-ever-after/.wrangler/tmp/bundle-mVoquo/middleware-insertion-facade.js";
 
 // We need to preserve all of the exports from the worker
-export * from "/Users/coultonfraser/Code/fraser-ever-after/api-fraser-ever-after/.wrangler/tmp/bundle-zQ3odt/middleware-insertion-facade.js";
+export * from "/Users/coultonfraser/Code/fraser-ever-after/api-fraser-ever-after/.wrangler/tmp/bundle-mVoquo/middleware-insertion-facade.js";
 
 class __Facade_ScheduledController__ implements ScheduledController {
 	#noRetry: ScheduledController["noRetry"];

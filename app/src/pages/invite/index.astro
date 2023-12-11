@@ -1,0 +1,80 @@
+---
+import Navigation from '@/components/Navigation.astro';
+import '../../styles/base.css';
+import Header from '@/components/Header.astro'
+const errors = { inviteId: "" };
+if (Astro.request.method === "POST") {
+  
+  try {
+    const data = await Astro.request.formData();
+    const inviteId = data.get("invite-id");
+    const isUUID = String(inviteId).match(
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+    );
+    if (typeof inviteId !== "string" || !isUUID) {
+      errors.inviteId += "Invalid invite code.";
+    }
+    const hasErrors = Object.values(errors).some(msg => msg)
+    console.log(hasErrors)
+    if (!hasErrors) {
+      return Astro.redirect("/");
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(error.message);
+    }
+  }
+}
+---
+<html lang="en" class="bg-paper">
+	<head>
+
+<script>
+  // Find all buttons with the `alert` class on the page.
+  const buttonSubmit = document.getElementById('invite-button');
+  // Handle clicks on each button.
+  if(buttonSubmit !== null){
+    buttonSubmit.addEventListener('click', () => {
+      let inviteId = document.getElementById('invite-id') as HTMLInputElement;
+
+      if(inviteId !== null){
+        const isUUID = String(inviteId.value).match(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-[0-5][0-9a-f]{3}-[089ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+      );
+      if (typeof inviteId.value !== "string" || !isUUID) {
+      alert('Invalid invite code.')
+      }else {
+        window.location.href = "/invite/" + String(inviteId.value).toLowerCase();
+      }
+      }else {
+        alert('Please enter an invite code.')
+      }
+    });
+  }
+</script>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link href="../../dist/output.css" rel="stylesheet">
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content={Astro.generator} />
+		<title>Fraser Ever After</title>
+	</head>
+	<body class="flex flex-col">
+		<div class="w-full h-auto overflow-auto">
+			<Header />
+      <div class="flex flex-col border-y py-3 border-slate-500 pl-20">
+        <Navigation/>
+      </div>
+      <main class="flex flex-col items-center w-full px-10">
+<div class="max-w-prose gap-5 w-72 flex flex-col py-10 items-center">
+  <div class="w-full">
+    <label for="invite code" class="block text-sm font-medium leading-6 text-gray-900">Invite Code</label>
+    <div class="mt-2">
+      <input type="text" name="invite-id" id="invite-id" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx">
+    </div>
+  </div>
+  <button type="button" id="invite-button" class="rounded-full bg-white w-52 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-500 hover:bg-gray-100 max-w-sm px-10 text-center">Submit</button>
+      </main>
+		</div>
+	</body>
+</html>
