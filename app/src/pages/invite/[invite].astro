@@ -5,7 +5,7 @@ import '../../styles/base.css';
 import Header from '@/components/Header.astro'
 import {RsvpForm} from '@/components/RsvpForm.tsx'
 const getInvite = async () => {
-  const res = await fetch(`http://localhost:8787/api/invite/${invite}`, {
+  const res = await fetch(`${import.meta.env.API_ENDPOINT}/api/invite/${invite}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -14,7 +14,7 @@ const getInvite = async () => {
   return await res.json();
 }
 const getRvsp = async () => {
-  const res = await fetch(`http://localhost:8787/api/rsvp/${invite}`, {
+  const res = await fetch(`${import.meta.env.API_ENDPOINT}/api/rsp/${invite}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',

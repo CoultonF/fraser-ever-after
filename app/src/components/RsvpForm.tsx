@@ -75,7 +75,7 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
   const createRsvp = async (createData: any) => {
   try{
 
-    await fetch("http://localhost:8787/api/rsvp/", {
+    await fetch(`${import.meta.env.API_ENDPOINT}/api/rsvp/`, {
       method: 'POST',
       body: JSON.stringify(createData),
     })
@@ -84,7 +84,7 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
   }
   }
   const updateRsvp = async (updateData: any) => {
-  const res = await fetch(`http://localhost:8787/api/invite`, {
+  const res = await fetch(`${import.meta.env.API_ENDPOINT}/api/invite`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
   return await res.json();
   }
   const deleteRsvp = async (deleteData: any) => {
-  const res = await fetch(`http://localhost:8787/api/rsvp`, {
+  const res = await fetch(`${import.meta.env.API_ENDPOINT}/api/rsvp`, {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
