@@ -13,6 +13,9 @@ export const InviteUpdateSchema = {
 	rsvps: [RsvpUpdateSchema]
 };
 
+export const RsvpDeleteSchema = [Number]
+
+
 export const Rsvp = {
 	first_name: new Str(),
 	last_name: new Str(),

@@ -14,7 +14,7 @@ const getInvite = async () => {
   return await res.json();
 }
 const getRvsp = async () => {
-  const res = await fetch(`http://localhost:8787/api/rvsp/${invite}`, {
+  const res = await fetch(`http://localhost:8787/api/rsvp/${invite}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -34,7 +34,6 @@ const rvspData = await getRvsp();
 		<meta charset="utf-8" />
     <meta name="robots" content="noindex" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link href="../../dist/output.css" rel="stylesheet">
 		<meta name="viewport" content="width=device-width" />
 		<meta name="generator" content={Astro.generator} />
 		<title>Fraser Ever After</title>

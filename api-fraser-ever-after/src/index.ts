@@ -3,6 +3,7 @@ import { RsvpCreate } from "./endpoints/rsvpCreate";
 import { RsvpFetch } from "./endpoints/rsvpFetch";
 import { InviteFetch } from "./endpoints/inviteFetch";
 import { InviteUpdate } from "./endpoints/inviteUpdate";
+import { RsvpDelete } from "endpoints/inviteDelete";
 
 export const router = OpenAPIRouter({
 	docs_url: "/",
@@ -11,6 +12,7 @@ export const router = OpenAPIRouter({
 // router.get("/api/tasks/", TaskList);
 router.post("/api/rsvp/", RsvpCreate);
 router.get("/api/rsvp/:inviteId", RsvpFetch);
+router.delete("/api/rsvp", RsvpDelete);
 router.put("/api/invite/", InviteUpdate);
 router.get("/api/invite/:inviteId", InviteFetch);
 // router.get("/api/tasks/:taskSlug/", TaskFetch);

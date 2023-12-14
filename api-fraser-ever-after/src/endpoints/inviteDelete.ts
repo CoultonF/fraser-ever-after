@@ -1,33 +1,27 @@
 import {
 	OpenAPIRoute,
 	OpenAPIRouteSchema,
-	Path,
 } from "@cloudflare/itty-router-openapi";
-import { Invite } from "../types";
 import { corsHeaders } from "cors";
+import { Invite, InviteUpdateSchema, RsvpDeleteSchema } from "../types";
 export interface Env {
   // If you set another name in wrangler.toml as the value for 'binding',
   // replace "DB" with the variable name you defined.
   DB: D1Database;
 }
 
-
-export class RsvpFetch extends OpenAPIRoute {
+export class RsvpDelete extends OpenAPIRoute {
 	static schema: OpenAPIRouteSchema = {
 		tags: ["RSVP"],
-		summary: "Fetch rsvps",
-		parameters: {
-			inviteId: Path(String, {
-				description: "Invite id",
-			}),
-		},
+		summary: "Delete an RSVP",
+		requestBody: RsvpDeleteSchema,
 	};
 
 	async handle(
 		request: Request,
 		env: Env,
 		context: any,
-		data: Record<string, any>
+		data: Record<string, typeof RsvpDeleteSchema>
 	) {
 		// Retrieve the validated request body
 const headers = new Headers({
@@ -41,8 +35,12 @@ const headers = new Headers({
   if (request.method === 'OPTIONS') {
     return new Response(null, { headers });
   }
-		const { inviteId } = data.params;
-		const {results: inviteResults} = await env.DB.prepare("select rsvp.* from invite join invite_rsvp using (invite_id) join rsvp using (rsvp_id) where invite_id = ?").bind(inviteId).all()
-		return inviteResults
+		const rsvpToDelete = data.body;
+		const placeholders = rsvpToDelete.map(() => "?").join(",");
+		const deleteIRQuery = `DELETE FROM invite_rsvp WHERE rsvp_id IN (${placeholders})`;
+		await env.DB.prepare(deleteIRQuery).bind(...rsvpToDelete).all();
+		const deleteRQuery = `DELETE FROM rsvp WHERE rsvp_id IN (${placeholders})`;
+		await env.DB.prepare(deleteRQuery).bind(...rsvpToDelete).all();
+		return new Response(undefined, {status: 200, headers: {"access-control-allow-origin": "*"}})
 	}
 }

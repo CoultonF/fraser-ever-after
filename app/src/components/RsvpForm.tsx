@@ -72,18 +72,74 @@ const InviteDetails = ({ inviteData }: any) => {
   )
 }
 export const RsvpForm = ({ inviteData, guestData }: any) => {
+  const createRsvp = async (createData: any) => {
+  try{
+
+    await fetch("http://localhost:8787/api/rsvp/", {
+      method: 'POST',
+      body: JSON.stringify(createData),
+    })
+  } catch (e) {
+    console.log(e)
+  }
+  }
+  const updateRsvp = async (updateData: any) => {
+  const res = await fetch(`http://localhost:8787/api/invite`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(updateData),
+  })
+  return await res.json();
+  }
+  const deleteRsvp = async (deleteData: any) => {
+  const res = await fetch(`http://localhost:8787/api/rsvp`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(deleteData),
+  })
+  return await res.json();
+  }
   const {handleSubmit, control, register} = useForm({
     defaultValues: {
-      invte: inviteData,
-      guests: guestData
+      invite: inviteData,
+      rsvps: guestData
     }
   })
   const {fields, append, remove} = useFieldArray({
     control,
-    name: "guests",
+    name: "rsvps",
   });
-  const onSubmit = (data: any) => {
+  const onSubmit = async (data: any) => {
+    const createRsvps = data.rsvps.filter((v)=> v?.rsvp_id === undefined)
+    const existingIds = guestData.map(v => v.rsvp_id)
+    const deleteRsvps = guestData.filter(v => !(data.rsvps.filter(v=>v?.rsvp_id !== undefined).map(v=>v.rsvp_id).includes(v?.rsvp_id)))
+    const updateRsvps = data.rsvps.filter((v)=>existingIds.includes(v?.rsvp_id))
     console.log({data})
+    console.log({guestData})
+    console.log({existingIds})
+    console.log({guestData})
+    console.log({updateRsvps})
+    console.log({deleteRsvps})
+    const createData = {
+      invite_id: inviteData.invite_id,
+      attending: 'Yes',
+      rsvps: createRsvps
+    }
+    const updateData = {
+      invite_id: inviteData.invite_id,
+      attending: 'Yes',
+      rsvps: updateRsvps
+    }
+    const deleteData = deleteRsvps.map(v => v?.rsvp_id)
+    console.log({updateData})
+    await createRsvp(createData)
+    await updateRsvp(updateData)
+    await deleteRsvp(deleteData)
+
   }
   useEffect(() => {
     if(fields.length === 0 || fields.findIndex(
@@ -99,9 +155,6 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
           <div className="flex flex-col gap-4">
             <InviteDetails inviteData={inviteData}/>
 <button
-              onClick={() => {
-              }}
-              type="button"
               className="w-full flex justify-center disabled:bg-gray-400 items-center gap-x-2 rounded-md active:bg-green-700 bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
               >
                 <svg className="-ml-0.5 h-5 w-5" fill="currentColor" aria-hidden="true"
@@ -119,15 +172,15 @@ height="16" width="14" viewBox="0 0 448 512">
                   <div key={field.id}>
                     <div className="flex flex-col gap-1">
                     <span>First Name</span>
-                    <input className="max-w-fit text-black" {...register(`guests.${index}.first_name`)}/>
+                    <input className="max-w-fit text-black" {...register(`rsvps.${index}.first_name`)}/>
                     </div>
                     <div className="flex flex-col gap-1">
                     <span>Last Name</span>
-                    <input className="max-w-fit text-black" {...register(`guests.${index}.last_name`)}/>
+                    <input className="max-w-fit text-black" {...register(`rsvps.${index}.last_name`)}/>
                     </div>
                     <div className="flex flex-col gap-1">
                     <span>Dietary Restrictions</span>
-                    <textarea className="max-w-sm min-h-[40px] text-black" {...register(`guests.${index}.dietary_restrictions`)}/>
+                    <textarea className="max-w-sm min-h-[40px] text-black" {...register(`rsvps.${index}.dietary_restrictions`)}/>
                     </div>
                     <button type="button" onClick={()=> remove(index)}>Remove</button>
                   </div>
@@ -144,7 +197,7 @@ height="16" width="14" viewBox="0 0 448 512">
               className="w-32 inline-flex disabled:bg-gray-400 items-center gap-x-2 rounded-md active:bg-green-700 bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
               >
                 <svg className="-ml-0.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd" />
+                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
                 </svg>
                 Add Guest
               </button>
