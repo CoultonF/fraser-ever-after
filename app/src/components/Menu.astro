@@ -1,9 +1,28 @@
 ---
+function classNames(...args: any) {
+  return args.filter(Boolean).join(' ');
+}
+const active = (url: string) => {
+  if (url.startsWith('/invite')) {
+    return classNames(Astro.url.pathname.includes(url) ? 'font-bold' : '');
+  }
+  return classNames(url === Astro.url.pathname ? 'font-bold' : '');
+};
 ---
-<div class="flex flex-row md:gap-10 gap-3 sm:text-base text-sm border-b mb-10 border-black pb-5 w-full items-center justify-center">
-  <a href="/">Home</a>
-  <a href="/invite">RSVP</a>
-  <a href="/registry">Registry</a>
-  <a href="/venue">Venue</a>
-  <a href="/faq">FAQ</a>
+
+<script>
+  const storedValue = localStorage.getItem('inviteId');
+  console.log(storedValue);
+  document.getElementById('invite-menu-href').href = `/invite${
+    typeof storedValue === 'string' ? '/' + storedValue : ''
+  }`;
+</script>
+<div
+  class="flex flex-row md:gap-10 gap-3 sm:text-base text-sm border-b mb-10 border-black pb-5 w-full items-center justify-center"
+>
+  <a class={active('/')} href="/">Home</a>
+  <a class={active('/invite')} id="invite-menu-href">RSVP</a>
+  <a class={active('/registry')} href="/registry">Registry</a>
+  <a class={active('/venue')} href="/venue">Venue</a>
+  <a class={active('/faq')} href="/faq">FAQ</a>
 </div>

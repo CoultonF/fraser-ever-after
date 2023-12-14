@@ -2,52 +2,70 @@
 const { invite } = Astro.params;
 import Navigation from '@/components/Navigation.astro';
 import '../../styles/base.css';
-import Header from '@/components/Header.astro'
-import {RsvpForm} from '@/components/RsvpForm.tsx'
+import Header from '@/components/Header.astro';
+import Menu from '@/components/Menu.astro';
+import { RsvpForm } from '@/components/RsvpForm.tsx';
 const getInvite = async () => {
   const res = await fetch(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/invite/${invite}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
-  })
+  });
   return await res.json();
-}
-const getRvsp = async () => {
+};
+const getRsvp = async () => {
   const res = await fetch(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/rsvp/${invite}`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
     },
-  })
+  });
   return await res.json();
+};
+let inviteData = [];
+let rsvpData = [];
+try {
+  inviteData = await getInvite();
+  rsvpData = await getRsvp();
+  if (inviteData.length === 0) {
+    return Astro.redirect('/invite?error=1');
+  }
+} catch (e) {
+  return Astro.redirect('/invite?error=1');
 }
-const inviteData = await getInvite();
-if(inviteData.length === 0) {
-  Astro.redirect('/');
+if (inviteData.length === 0) {
+  return Astro.redirect('/invite?error=1');
 }
-const rvspData = await getRvsp();
 ---
+
 <html lang="en" class="bg-paper">
-	<head>
+  <head>
+    <meta charset="utf-8" />
+    <script>
+      // Store a value in local storage
+      const inviteEl = document.getElementById('inviteId');
+      if (inviteEl) {
+        localStorage.setItem('inviteId', inviteEl.innerText);
+      }
 
-		<meta charset="utf-8" />
-    <meta name="robots" content="noindex" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Fraser Ever After</title>
-	</head>
-	<body class="flex flex-col">
-		<div class="w-full h-auto overflow-auto">
-			<Header />
-      <div class="flex flex-col border-y py-3 border-slate-500 pl-20">
-        <Navigation/>
-      </div>
+      // Retrieve the stored value
+      const storedValue = localStorage.getItem('inviteId');
+      console.log(storedValue); // Output: Hello, World!
+    </script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Fraser Ever After</title>
+  </head>
+  <body class="flex flex-col">
+    <div class="w-full h-auto overflow-auto">
+      <Header />
+      <Menu />
       <main class="flex flex-col items-center w-full px-10">
-        <RsvpForm inviteData={inviteData.at(0)} guestData={rvspData} client:load />
+        <RsvpForm inviteData={inviteData.at(0)} guestData={rsvpData} client:load />
+        <span class="hidden" id="inviteId">{invite}</span>
       </main>
-		</div>
-	</body>
+    </div>
+  </body>
 </html>
-
