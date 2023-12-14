@@ -2,7 +2,7 @@ import {
 	OpenAPIRoute,
 	OpenAPIRouteSchema,
 } from "@cloudflare/itty-router-openapi";
-import { corsHeaders } from "cors";
+import { corsHeaders as headers } from "cors";
 import { Invite, InviteUpdateSchema } from "../types";
 export interface Env {
   // If you set another name in wrangler.toml as the value for 'binding',
@@ -16,7 +16,6 @@ export class InviteUpdate extends OpenAPIRoute {
 		summary: "Update an existing invite",
 		requestBody: InviteUpdateSchema,
 	};
-
 	async handle(
 		request: Request,
 		env: Env,
@@ -24,21 +23,16 @@ export class InviteUpdate extends OpenAPIRoute {
 		data: Record<string, typeof InviteUpdateSchema>
 	) {
 		// Retrieve the validated request body
-const headers = new Headers({
-    'Access-Control-Allow-Origin': '*', // Adjust the allowed origin as needed
-    'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Max-Age': '86400', // 24 hours
-  });
 
   // Check if it's a preflight request (OPTIONS) and respond accordingly
   if (request.method === 'OPTIONS') {
-    return new Response(null, { headers });
+    return new Response(null, { headers: headers });
   }
 		const rsvpToUpdate = data.body;
 		const {results: inviteResults} = await env.DB.prepare("select * from invite where invite_id = ?").bind(rsvpToUpdate.invite_id).all()
+		console.log(inviteResults)
 		if (inviteResults.length !== 1) {
-			return new Response("Invite not found", {status: 404})
+			return new Response("Invite not found", {headers: headers})
 		}
 		const rsvpBatches = []
 		const {results: inviteRsvpCount} = await env.DB.prepare("select count(*) as rsvp_count from invite_rsvp where invite_id = ?").bind(rsvpToUpdate.invite_id).all()
@@ -55,6 +49,6 @@ const headers = new Headers({
 		})
 		await env.DB.prepare("update invite set attending = ? where invite_id = ?").bind(rsvpToUpdate.attending, rsvpToUpdate.invite_id).run()
 		if (rsvpBatches.length > 0) await env.DB.batch(rsvpBatches)
-		return new Response(undefined, {status: 200, headers: {"access-control-allow-origin": "*"}})
+		return new Response(null, {status: 200, headers: headers})
 	}
 }

@@ -10,10 +10,10 @@ export const router = OpenAPIRouter({
 });
 
 // router.get("/api/tasks/", TaskList);
-router.post("/api/rsvp/", RsvpCreate);
+router.post("/api/rsvp/create", RsvpCreate);
 router.get("/api/rsvp/:inviteId", RsvpFetch);
-router.delete("/api/rsvp", RsvpDelete);
-router.put("/api/invite/", InviteUpdate);
+router.post("/api/rsvp/delete", RsvpDelete);
+router.post("/api/rsvp/update", InviteUpdate);
 router.get("/api/invite/:inviteId", InviteFetch);
 // router.get("/api/tasks/:taskSlug/", TaskFetch);
 // router.delete("/api/tasks/:taskSlug/", TaskDelete);

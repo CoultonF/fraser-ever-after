@@ -75,7 +75,7 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
   const createRsvp = async (createData: any) => {
   try{
 
-    await fetch(`${import.meta.env.API_ENDPOINT}/api/rsvp/`, {
+    await fetch(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/rsvp/create`, {
       method: 'POST',
       body: JSON.stringify(createData),
     })
@@ -84,24 +84,17 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
   }
   }
   const updateRsvp = async (updateData: any) => {
-  const res = await fetch(`${import.meta.env.API_ENDPOINT}/api/invite`, {
-    method: 'PUT',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+    console.log(import.meta.env)
+  const res = await fetch(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/rsvp/update`, {
+    method: 'POST',
     body: JSON.stringify(updateData),
   })
-  return await res.json();
   }
   const deleteRsvp = async (deleteData: any) => {
-  const res = await fetch(`${import.meta.env.API_ENDPOINT}/api/rsvp`, {
-    method: 'DELETE',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+  await fetch(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/rsvp/delete`, {
+    method: 'POST',
     body: JSON.stringify(deleteData),
   })
-  return await res.json();
   }
   const {handleSubmit, control, register} = useForm({
     defaultValues: {
@@ -113,17 +106,18 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
     control,
     name: "rsvps",
   });
-  const onSubmit = async (data: any) => {
-    const createRsvps = data.rsvps.filter((v)=> v?.rsvp_id === undefined)
-    const existingIds = guestData.map(v => v.rsvp_id)
-    const deleteRsvps = guestData.filter(v => !(data.rsvps.filter(v=>v?.rsvp_id !== undefined).map(v=>v.rsvp_id).includes(v?.rsvp_id)))
-    const updateRsvps = data.rsvps.filter((v)=>existingIds.includes(v?.rsvp_id))
-    console.log({data})
-    console.log({guestData})
-    console.log({existingIds})
-    console.log({guestData})
-    console.log({updateRsvps})
-    console.log({deleteRsvps})
+  const onSubmit = async (data: any, e) => {
+    e.preventDefault();
+    const createRsvps = data.rsvps.filter((v)=> v?.rsvp_id === undefined);
+    const existingIds = guestData.map(v => v.rsvp_id);
+    const deleteRsvps = guestData.filter(v => !(data.rsvps.filter(v=>v?.rsvp_id !== undefined).map(v=>v.rsvp_id).includes(v?.rsvp_id)));
+    const updateRsvps = data.rsvps.filter((v)=>existingIds.includes(v?.rsvp_id));
+    console.log({data});
+    console.log({guestData});
+    console.log({existingIds});
+    console.log({guestData});
+    console.log({updateRsvps});
+    console.log({deleteRsvps});
     const createData = {
       invite_id: inviteData.invite_id,
       attending: 'Yes',
@@ -135,7 +129,7 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
       rsvps: updateRsvps
     }
     const deleteData = deleteRsvps.map(v => v?.rsvp_id)
-    console.log({updateData})
+    console.log({deleteData})
     await createRsvp(createData)
     await updateRsvp(updateData)
     await deleteRsvp(deleteData)
