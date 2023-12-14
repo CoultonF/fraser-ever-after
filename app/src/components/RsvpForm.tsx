@@ -1,3 +1,4 @@
+import { classNames } from '@/functions/classNames.ts';
 import { useEffect } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
@@ -79,11 +80,10 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
         body: JSON.stringify(createData),
       });
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
   const updateRsvp = async (updateData: any) => {
-    console.log(import.meta.env);
     const res = await fetch(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/rsvp/update`, {
       method: 'POST',
       body: JSON.stringify(updateData),
@@ -184,11 +184,11 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
                   <div key={field.id}>
                     <div className="flex flex-col gap-1">
                       <span>First Name</span>
-                      <input className="max-w-fit text-black" {...register(`rsvps.${index}.first_name`)} />
+                      <input disabled={index===0} className={classNames("max-w-fit text-black", index===0 && 'bg-gray-50 text-slate-700 border-gray-400')} {...register(`rsvps.${index}.first_name`)} />
                     </div>
                     <div className="flex flex-col gap-1">
                       <span>Last Name</span>
-                      <input className="max-w-fit text-black" {...register(`rsvps.${index}.last_name`)} />
+                      <input disabled={index===0} className={classNames("max-w-fit text-black", index===0 && 'bg-gray-50 text-slate-700 border-gray-400')} {...register(`rsvps.${index}.last_name`)} />
                     </div>
                     <div className="flex flex-col gap-1">
                       <span>Dietary Restrictions</span>
@@ -197,9 +197,9 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
                         {...register(`rsvps.${index}.dietary_restrictions`)}
                       />
                     </div>
-                    <button type="button" onClick={() => remove(index)}>
+                    {index !== 0 &&<button type="button" onClick={() => remove(index)}>
                       Remove
-                    </button>
+                    </button>}
                   </div>
                 );
               })}

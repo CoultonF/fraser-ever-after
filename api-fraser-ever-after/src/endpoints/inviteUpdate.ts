@@ -30,14 +30,12 @@ export class InviteUpdate extends OpenAPIRoute {
   }
 		const rsvpToUpdate = data.body;
 		const {results: inviteResults} = await env.DB.prepare("select * from invite where invite_id = ?").bind(rsvpToUpdate.invite_id).all()
-		console.log(inviteResults)
 		if (inviteResults.length !== 1) {
 			return new Response("Invite not found", {headers: headers})
 		}
 		const rsvpBatches = []
 		const {results: inviteRsvpCount} = await env.DB.prepare("select count(*) as rsvp_count from invite_rsvp where invite_id = ?").bind(rsvpToUpdate.invite_id).all()
 		const remainingInvites = Number(Number(inviteResults[0].guest_count) - Number(inviteRsvpCount[0].rsvp_count))
-		console.log({remainingInvites})
 		rsvpToUpdate.rsvps.forEach(rsvp => {
 			rsvpBatches.push(
 				env.DB.prepare(

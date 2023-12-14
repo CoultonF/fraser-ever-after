@@ -1,7 +1,5 @@
 ---
-function classNames(...args: any) {
-  return args.filter(Boolean).join(' ');
-}
+import { classNames } from '@/functions/classNames.ts';
 const active = (url: string) => {
   if (url.startsWith('/invite')) {
     return classNames(Astro.url.pathname.includes(url) ? 'font-bold' : '');
@@ -12,10 +10,10 @@ const active = (url: string) => {
 
 <script>
   const storedValue = localStorage.getItem('inviteId');
-  console.log(storedValue);
-  document.getElementById('invite-menu-href').href = `/invite${
-    typeof storedValue === 'string' ? '/' + storedValue : ''
-  }`;
+  const invEl = document.getElementById('invite-menu-href') as HTMLAnchorElement;
+  if (invEl) {
+    invEl.href = `/invite${typeof storedValue === 'string' ? '/' + storedValue : ''}`;
+  }
 </script>
 <div
   class="flex flex-row md:gap-10 gap-3 sm:text-base text-sm border-b mb-10 border-black pb-5 w-full items-center justify-center"

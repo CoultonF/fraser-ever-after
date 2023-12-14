@@ -38,7 +38,6 @@ export class RsvpCreate extends OpenAPIRoute {
 		const rsvpBatches = []
 		const {results: inviteRsvpCount} = await env.DB.prepare("select count(*) as rsvp_count from invite_rsvp where invite_id = ?").bind(rsvpToCreate.invite_id).all()
 		const remainingInvites = Number(Number(inviteResults[0].guest_count) - Number(inviteRsvpCount[0].rsvp_count))+1
-		console.log({remainingInvites})
 		rsvpToCreate.rsvps.filter((_, index) => index < remainingInvites).forEach(rsvp => {
 			rsvpBatches.push(
 				env.DB.prepare(
@@ -51,7 +50,6 @@ export class RsvpCreate extends OpenAPIRoute {
 		const rsvpResults = rsvpBatches.length > 0 ? await env.DB.batch(rsvpBatches) : []
 		const inviteRsvp = []
 		rsvpResults.forEach((rsvp, index) => {
-			console.log({rsvp})
 			inviteRsvp.push(env.DB.prepare("insert into invite_rsvp (invite_id, rsvp_id) values (?,?)").bind(rsvpToCreate.invite_id, rsvp.results.at(0)?.rsvp_id))
 		})
 		if (inviteRsvp.length > 0) await env.DB.batch(inviteRsvp)
