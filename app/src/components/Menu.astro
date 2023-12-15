@@ -8,13 +8,6 @@ const active = (url: string) => {
 };
 ---
 
-<script>
-  const storedValue = localStorage.getItem('inviteId');
-  const invEl = document.getElementById('invite-menu-href') as HTMLAnchorElement;
-  if (invEl) {
-    invEl.href = `/invite${typeof storedValue === 'string' ? '/' + storedValue : ''}`;
-  }
-</script>
 <div
   class="flex flex-row md:gap-10 gap-3 sm:text-base text-sm border-b mb-10 border-black pb-5 w-full items-center justify-center"
 >
@@ -24,3 +17,6 @@ const active = (url: string) => {
   <a class={active('/venue')} href="/venue">Venue</a>
   <a class={active('/faq')} href="/faq">FAQ</a>
 </div>
+<script>
+  import '../scripts/menu.ts';
+</script>

@@ -1,15 +1,15 @@
 ---
 import CommonHead from '@/components/CommonHead.astro';
-import Home from '@/components/Home.astro';
-import Menu from '@/components/Menu.astro';
-import Header from '../components/Header.astro';
 import '../styles/base.css';
+import { Faq } from '@/components/Faq.tsx';
+import Menu from '@/components/Menu.astro';
+import Header from '@/components/Header.astro';
 ---
 
-<html lang="en" class="bg-paper">
+<html class="bg-paper">
   <head>
-    <meta charset="utf-8" />
     <CommonHead />
+    <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <title>Fraser Ever After</title>
@@ -18,7 +18,9 @@ import '../styles/base.css';
     <div class="w-full h-auto overflow-auto">
       <Header />
       <Menu />
-      <Home />
+      <div class="w-full">
+        <Faq client:load />
+      </div>
     </div>
   </body>
 </html>

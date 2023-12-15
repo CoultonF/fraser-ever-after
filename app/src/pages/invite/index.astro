@@ -1,5 +1,5 @@
 ---
-import Navigation from '@/components/Navigation.astro';
+import CommonHead from '@/components/CommonHead.astro';
 import '../../styles/base.css';
 import Header from '@/components/Header.astro';
 import Menu from '@/components/Menu.astro';
@@ -29,6 +29,7 @@ if (Astro.request.method === 'POST') {
 
 <html lang="en" class="bg-paper">
   <head>
+    <CommonHead />
     <script>
       // Find all buttons with the `alert` class on the page.
       const buttonSubmit = document.getElementById('invite-button');
@@ -57,7 +58,6 @@ if (Astro.request.method === 'POST') {
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
     <title>Fraser Ever After</title>
   </head>
   <body class="flex flex-col">

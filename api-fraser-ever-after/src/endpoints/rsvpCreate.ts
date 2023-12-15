@@ -3,7 +3,7 @@ import {
 	OpenAPIRouteSchema,
 } from "@cloudflare/itty-router-openapi";
 import { corsHeaders as headers } from "cors";
-import { Invite } from "../types";
+import { InviteCreate } from "../types";
 export interface Env {
   // If you set another name in wrangler.toml as the value for 'binding',
   // replace "DB" with the variable name you defined.
@@ -15,14 +15,14 @@ export class RsvpCreate extends OpenAPIRoute {
 	static schema: OpenAPIRouteSchema = {
 		tags: ["RSVP"],
 		summary: "Create a new rsvp",
-		requestBody: Invite,
+		requestBody: InviteCreate,
 	};
 
 	async handle(
 		request: Request,
 		env: Env,
 		context: any,
-		data: Record<string, typeof Invite>
+		data: Record<string, typeof InviteCreate>
 	) {
 
   // Check if it's a preflight request (OPTIONS) and respond accordingly
@@ -39,11 +39,16 @@ export class RsvpCreate extends OpenAPIRoute {
 		const {results: inviteRsvpCount} = await env.DB.prepare("select count(*) as rsvp_count from invite_rsvp where invite_id = ?").bind(rsvpToCreate.invite_id).all()
 		const remainingInvites = Number(Number(inviteResults[0].guest_count) - Number(inviteRsvpCount[0].rsvp_count))+1
 		rsvpToCreate.rsvps.filter((_, index) => index < remainingInvites).forEach(rsvp => {
+
+		let dr = rsvp.dietary_restrictions
+			if (dr === '' || dr === undefined || dr === null){
+				dr = 'None';
+			}
 			rsvpBatches.push(
 				env.DB.prepare(
 					"insert into rsvp (first_name, last_name, dietary_restrictions) values (?,?,?) returning rsvp_id"
 					).bind(
-						rsvp.first_name, rsvp.last_name, rsvp.dietary_restrictions
+						rsvp.first_name, rsvp.last_name, dr
 						)
 			)
 		})

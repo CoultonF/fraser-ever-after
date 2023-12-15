@@ -1,24 +1,24 @@
 ---
-import Home from '@/components/Home.astro';
+import CommonHead from '@/components/CommonHead.astro';
 import Menu from '@/components/Menu.astro';
 import Donate from '@/components/Donate.astro';
-import Header from '@/components/Header.astro'
+import Header from '@/components/Header.astro';
 import '../../styles/base.css';
 ---
 
 <html lang="en" class="bg-paper">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Fraser Ever After</title>
-	</head>
-	<body class="flex flex-col">
-		<div class="w-full h-auto overflow-auto">
-			<Header />
-			<Menu/>
+  <head>
+    <CommonHead />
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Fraser Ever After</title>
+  </head>
+  <body class="flex flex-col">
+    <div class="w-full h-auto overflow-auto">
+      <Header />
+      <Menu />
       <Donate />
-		</div>
-	</body>
+    </div>
+  </body>
 </html>

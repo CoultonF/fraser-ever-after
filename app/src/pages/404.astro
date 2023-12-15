@@ -1,25 +1,30 @@
 ---
+import CommonHead from '@/components/CommonHead.astro';
 import '../styles/base.css';
+import Header from '@/components/Header.astro';
+import Menu from '@/components/Menu.astro';
 ---
-  <html class="h-full bg-paper">
-  <head>
-    <meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Fraser Ever After</title>
-	</head>
-  <body class="h-full absolute inset-0 ">
-<div class="mx-auto max-w-7xl px-6 py-32 text-center sm:py-32 lg:px-8">
-          <p class="text-base font-semibold leading-8 text-wkhite">404</p>
-          <h1 class="mt-4 text-3xl font-bold tracking-tight text-wkhite sm:text-5xl">Page not found</h1>
-          <p class="mt-4 text-base text-black/70 sm:mt-6">Sorry, we couldn’t find the page you’re looking for.</p>
-          <div class="mt-10 flex justify-center">
-            <a href="/" class="text-sm font-semibold leading-7 text-wkhite">
-              <span aria-hidden="true">&larr;</span> Back to home
-            </a>
-          </div>
-        </div>
-	</body>
-</html>
 
+<html class="h-full bg-paper">
+  <head>
+    <CommonHead />
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Fraser Ever After</title>
+  </head>
+  <body class="h-full absolute inset-0">
+    <Header />
+    <Menu />
+    <div class="mx-auto max-w-7xl px-6 py-32 text-center sm:py-32 lg:px-8">
+      <p class="text-base font-semibold leading-8 text-wkhite">404</p>
+      <h1 class="mt-4 text-3xl font-bold tracking-tight text-wkhite sm:text-5xl">Page not found</h1>
+      <p class="mt-4 text-base text-black/70 sm:mt-6">Sorry, we couldn’t find the page you’re looking for.</p>
+      <div class="mt-10 flex justify-center">
+        <a href="/" class="text-sm font-semibold leading-7 text-wkhite">
+          <span aria-hidden="true">&larr;</span> Back to home
+        </a>
+      </div>
+    </div>
+  </body>
+</html>

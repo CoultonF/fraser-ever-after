@@ -1,20 +1,27 @@
 import { OpenAPIRouter } from "@cloudflare/itty-router-openapi";
+import { Router, createCors, error, json } from 'itty-router'
 import { RsvpCreate } from "./endpoints/rsvpCreate";
 import { RsvpFetch } from "./endpoints/rsvpFetch";
 import { InviteFetch } from "./endpoints/inviteFetch";
 import { InviteUpdate } from "./endpoints/inviteUpdate";
 import { RsvpDelete } from "endpoints/inviteDelete";
+const { preflight, corsify } = createCors({
+  origins: ['*'],
+  methods: ['GET', 'POST', 'PATCH', 'DELETE'],
+})
 
 export const router = OpenAPIRouter({
 	docs_url: "/",
+	
 });
 
+router.all("*", preflight)
 // router.get("/api/tasks/", TaskList);
-router.post("/api/rsvp/create", RsvpCreate);
-router.get("/api/rsvp/:inviteId", RsvpFetch);
-router.post("/api/rsvp/delete", RsvpDelete);
-router.post("/api/rsvp/update", InviteUpdate);
-router.get("/api/invite/:inviteId", InviteFetch);
+router.post("/api/rsvp/create", preflight, RsvpCreate);
+router.get("/api/rsvp/:inviteId", preflight, RsvpFetch);
+router.post("/api/rsvp/delete", preflight, RsvpDelete);
+router.post("/api/rsvp/update", preflight, InviteUpdate);
+router.get("/api/invite/:inviteId", preflight, InviteFetch);
 // router.get("/api/tasks/:taskSlug/", TaskFetch);
 // router.delete("/api/tasks/:taskSlug/", TaskDelete);
 

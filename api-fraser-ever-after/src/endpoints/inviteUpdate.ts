@@ -37,11 +37,15 @@ export class InviteUpdate extends OpenAPIRoute {
 		const {results: inviteRsvpCount} = await env.DB.prepare("select count(*) as rsvp_count from invite_rsvp where invite_id = ?").bind(rsvpToUpdate.invite_id).all()
 		const remainingInvites = Number(Number(inviteResults[0].guest_count) - Number(inviteRsvpCount[0].rsvp_count))
 		rsvpToUpdate.rsvps.forEach(rsvp => {
+		let dr = rsvp.dietary_restrictions
+			if (dr === '' || dr === undefined || dr === null){
+				dr = 'None';
+			}
 			rsvpBatches.push(
 				env.DB.prepare(
-					"update rsvp set first_name = ?, last_name = ?, dietary_restrictions = ? where rsvp_id = ?"
+					"update rsvp set first_name = ?, last_name = ?, dietary_restrictions = ?, main_dish = ? where rsvp_id = ?"
 					).bind(
-						rsvp.first_name, rsvp.last_name, rsvp.dietary_restrictions, rsvp.rsvp_id
+						rsvp.first_name, rsvp.last_name, dr, rsvp.main_dish, rsvp.rsvp_id
 						)
 			)
 		})

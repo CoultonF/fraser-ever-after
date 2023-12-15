@@ -1,7 +1,10 @@
 import { classNames } from '@/functions/classNames.ts';
 import { useEffect, useState } from 'react';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook-form';
+import { ComboBox } from '@/components/ComboBox.tsx';
 import toast, { Toaster } from 'react-hot-toast';
+import { ErrorMessage } from "@hookform/error-message"
+
 function formatPhoneNumber(phoneNumber: string) {
   // Remove any non-digit characters from the phone number
   const cleanedNumber = phoneNumber.replace(/\D/g, '');
@@ -18,6 +21,7 @@ function formatPhoneNumber(phoneNumber: string) {
   }
 }
 const InviteDetails = ({ inviteData }: any) => {
+  const { control, register } = useFormContext();
   const [show, setShow] = useState(false);
   return (
     <div className="lg:col-start-3 lg:row-end-1">
@@ -29,55 +33,72 @@ const InviteDetails = ({ inviteData }: any) => {
               {inviteData.first_name} {inviteData.last_name}
             </dd>
           </div>
-          <div className="flex-none self-end px-6 pt-4">
+          <div className="flex w-auto mx-0 gap-x-2 items-center px-6 pt-4">
+            <label htmlFor="attending">Attending:</label>
+            <select
+              className="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              defaultValue={undefined}
+              {...register('invite.attending')}
+            >
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+              <option value="Maybe">Maybe</option>
+            </select>
             {/* {inviteData?.attending !== undefined && inviteData?.attending !== null && ( */}
-            <dd className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+            {/* <dd className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
               Attending
-            </dd>
+            </dd> */}
             {/* )} */}
           </div>
           <div className="mt-4 flex w-full flex-none gap-x-4 px-6">
             <dd className="text-sm leading-6 text-gray-700">
               <span>Allowed Guests: </span>
-              <span>{inviteData?.guest_count}</span>
-            </dd>
-          </div>
-          {show && (
-          <>
-          <div className="mt-4 flex w-full flex-none gap-x-4 px-6">
-            <dd className="flex flex-row gap-2 text-sm leading-6 text-gray-700">
-              <span>Contact:</span>
-              <div className="flex flex-col">
-                <span>{formatPhoneNumber(String(inviteData?.phone_number))}</span>
-                <span>{inviteData?.email}</span>
-              </div>
-            </dd>
-          </div>
-          <div className="mt-4 flex w-full flex-none gap-x-4 px-6">
-            <dd className="text-sm flex flex-col overflow-clip leading-6 text-black">
-              <div className="flex flex-row justify-between">
-                <span className="font-semibold">Invite Id</span>
-                <button
-                  type="button"
-                  className="active:bg-slate-200 rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                  onClick={() => navigator.clipboard.writeText(inviteData.invite_id)}
-                >
-                  Copy Invite Id
-                </button>
-              </div>
-              <span className="w-auto mx-0 whitespace-nowrap overflow-clip text-ellipsis" title={inviteData.invite_id}>
-                {inviteData.invite_id}
+              <span>
+                {inviteData.first_name} + {inviteData?.guest_count}
               </span>
             </dd>
           </div>
-          </>
+          {show && (
+            <>
+              <div className="mt-4 flex w-full flex-none gap-x-4 px-6">
+                <dd className="flex flex-row gap-2 text-sm leading-6 text-gray-700">
+                  <span>Contact:</span>
+                  <div className="flex flex-col">
+                    <span>{formatPhoneNumber(String(inviteData?.phone_number))}</span>
+                    <span>{inviteData?.email}</span>
+                  </div>
+                </dd>
+              </div>
+              <div className="mt-4 flex w-full flex-none gap-x-4 px-6">
+                <dd className="text-sm flex flex-col overflow-clip leading-6 text-black">
+                  <div className="flex flex-row justify-between">
+                    <span className="font-semibold">Invite Id</span>
+                    <button
+                      type="button"
+                      className="active:bg-slate-200 rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                      onClick={() => navigator.clipboard.writeText(inviteData.invite_id)}
+                    >
+                      Copy Invite Id
+                    </button>
+                  </div>
+                  <span
+                    className="w-auto mx-0 whitespace-nowrap overflow-clip text-ellipsis"
+                    title={inviteData.invite_id}
+                  >
+                    {inviteData.invite_id}
+                  </span>
+                </dd>
+              </div>
+            </>
           )}
-          <div className='flex items-center justify-center w-full'>
-<button
-        type="button"
-        onClick={() => setShow(!show)}
-        className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-      >Show {!show ? 'More' : 'Less'}</button>
+          <div className="flex items-center justify-center w-full">
+            <button
+              type="button"
+              onClick={() => setShow(!show)}
+              className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+            >
+              Show {!show ? 'More' : 'Less'}
+            </button>
           </div>
         </dl>
       </div>
@@ -85,6 +106,72 @@ const InviteDetails = ({ inviteData }: any) => {
   );
 };
 export const RsvpForm = ({ inviteData, guestData }: any) => {
+  const notifyError = () =>
+    toast.custom(t => (
+      <div className="rounded-md bg-green-50 p-4 absolute">
+        <div className="flex">
+          <div className="flex-shrink-0">
+            <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </div>
+          <div className="ml-3">
+            <p className="text-sm font-medium text-green-800">Error Unable to Save</p>
+          </div>
+          <div className="ml-auto pl-3">
+            <div className="-mx-1.5 -my-1.5">
+              <button
+                onClick={() => toast.remove(t.id)}
+                type="button"
+                className="inline-flex rounded-md bg-green-50 p-1.5 text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-green-50"
+              >
+                <span className="sr-only">Dismiss</span>
+                <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    ));
+  const notify = () =>
+    toast.custom(t => (
+      <div className="rounded-md bg-green-50 p-4 absolute">
+        <div className="flex">
+          <div className="flex-shrink-0">
+            <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path
+                fillRule="evenodd"
+                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </div>
+          <div className="ml-3">
+            <p className="text-sm font-medium text-green-800">Successfully saved</p>
+          </div>
+          <div className="ml-auto pl-3">
+            <div className="-mx-1.5 -my-1.5">
+              <button
+                onClick={() => toast.remove(t.id)}
+                type="button"
+                className="inline-flex rounded-md bg-green-50 p-1.5 text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-green-50"
+              >
+                <span className="sr-only">Dismiss</span>
+                <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    ));
   const createRsvp = async (createData: any) => {
     try {
       await fetch(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/rsvp/create`, {
@@ -96,7 +183,8 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
     }
   };
   const updateRsvp = async (updateData: any) => {
-    const res = await fetch(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/rsvp/update`, {
+    console.log({ updateData });
+    await fetch(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/rsvp/update`, {
       method: 'POST',
       body: JSON.stringify(updateData),
     });
@@ -107,23 +195,27 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
       body: JSON.stringify(deleteData),
     });
   };
-  const {
-    handleSubmit,
-    control,
-    register,
-    formState: { isDirty },
-    reset,
-  } = useForm({
+  const methods = useForm({
     defaultValues: {
       invite: inviteData,
       rsvps: guestData,
     },
+    criteriaMode: 'all',
   });
+  const {
+    handleSubmit,
+    control,
+    register,
+    formState: { isDirty, errors },
+    reset,
+  } = methods;
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'rsvps',
   });
   const onSubmit = async (data: any, e) => {
+    e.preventDefault();
+    console.log({ data });
     const createRsvps = data.rsvps.filter(v => v?.rsvp_id === undefined);
     const existingIds = guestData.map(v => v.rsvp_id);
     const deleteRsvps = guestData.filter(
@@ -133,7 +225,9 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
           .map(v => v.rsvp_id)
           .includes(v?.rsvp_id),
     );
-    const updateRsvps = data.rsvps.filter(v => existingIds.includes(v?.rsvp_id));
+    const updateRsvps = data.rsvps
+      .filter(v => existingIds.includes(v?.rsvp_id))
+      .map(v => ({ ...v, main_dish: v?.main_dish ?? '' }));
     const createData = {
       invite_id: inviteData.invite_id,
       attending: 'Yes',
@@ -141,7 +235,7 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
     };
     const updateData = {
       invite_id: inviteData.invite_id,
-      attending: 'Yes',
+      attending: data.invite.attending,
       rsvps: updateRsvps,
     };
     const deleteData = deleteRsvps.map(v => v?.rsvp_id);
@@ -149,10 +243,10 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
       await createRsvp(createData);
       await updateRsvp(updateData);
       await deleteRsvp(deleteData);
-      toast.success('RSVP Successfully Saved.');
-      reset(data);
+      reset(data, { keepValues: true });
+      notify();
     } catch (e) {
-      toast.error('ERROR: Unable to save.');
+      // toast.error('ERROR: Unable to save.');
     }
   };
   useEffect(() => {
@@ -162,111 +256,117 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
         field => field.first_name === inviteData.first_name && field.last_name === inviteData.last_name,
       ) === -1
     ) {
-      append({ first_name: inviteData.first_name, last_name: inviteData.last_name, dietary_restrictions: '' });
+      append({
+        first_name: inviteData.first_name,
+        last_name: inviteData.last_name,
+        dietary_restrictions: '',
+        main_dish: '',
+      });
     }
   }, [fields]);
+  console.log({ inviteData });
   return (
-    <form className="pb-8" onSubmit={handleSubmit(onSubmit)}>
-      <div className="space-y-12">
-        <div className="grid grid-cols-1 gap-x-8 gap-y-2 border-b border-gray-900/10 pb-12 md:grid-cols-3">
-          <div className="flex flex-col gap-4">
-            <InviteDetails inviteData={inviteData} />
-            
-          </div>
-          <div className="grid w-auto mx-0 max-w-2xl grid-cols-1 gap-x-6 gap-y-2 h-fit sm:grid-cols-1 md:col-span-2">
-            <h3 className="col-span-full h-fit text-xl">Your Guest List</h3>
-            <div className="col-span-full flex flex-col gap-4">
-              {fields.map((field, index) => {
-                return (
-                  <div key={index} className="overflow-none bg-white shadow rounded-lg">
-                    <div className="px-4 py-5 sm:p-6">
-                      <div className="flex flex-col gap-1">
-                        <span>First Name</span>
-                        <input
-                          disabled={index === 0}
-                          className={classNames(
-                            'max-w-fit text-black',
-                            index === 0 && 'bg-gray-50 text-slate-700 border-gray-400',
-                          )}
-                          {...register(`rsvps.${index}.first_name`)}
-                        />
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        <span>Last Name</span>
-                        <input
-                          disabled={index === 0}
-                          className={classNames(
-                            'max-w-fit text-black',
-                            index === 0 && 'bg-gray-50 text-slate-700 border-gray-400',
-                          )}
-                          {...register(`rsvps.${index}.last_name`)}
-                        />
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        <span>Dietary Restrictions</span>
-                        <textarea
-                          className="max-w-sm min-h-[40px] text-black"
-                          {...register(`rsvps.${index}.dietary_restrictions`)}
-                        />
-                      </div>
-                    </div>
-                        {index !== 0 && (
-                    <div className="relative  inset-y-[15px]">
-                      <div className="relative inset-1 flex justify-center">
-                          <button
-                            type="button"
-                            onClick={() => remove(index)}
-                            className="inline-flex items-center gap-x-1.5 active:bg-gray-100 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-slate-500 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="-ml-1 -mr-0.5 h-5 w-5 fill-slate-500"
-                              height="16"
-                              width="20"
-                              viewBox="0 0 640 512"
-                            >
-                              <path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM472 200H616c13.3 0 24 10.7 24 24s-10.7 24-24 24H472c-13.3 0-24-10.7-24-24s10.7-24 24-24z" />
-                            </svg>
-                            Remove Guest
-                          </button>
-                      </div>
-                    </div>
-                        )}
-                  </div>
-                );
-              })}
-              {fields.length <= inviteData?.guest_count && (
-                <button
-                  disabled={fields.length > inviteData?.guest_count}
-                  onClick={() => {
-                    if (fields.length <= inviteData?.guest_count) {
-                      append({ first_name: '', last_name: '', dietary_restrictions: '' });
-                    }
-                  }}
-                  type="button"
-                  className="w-32 inline-flex disabled:bg-gray-400 items-center gap-x-2 rounded-md active:bg-green-700 bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-                >
-                  <svg className="-ml-0.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path
-                      fillRule="evenodd"
-                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  Add Guest
-                </button>
-              )}
+    <form className="w-full flex flex-col" onSubmit={handleSubmit(onSubmit)}>
+      <FormProvider {...methods}>
+        <div className="space-y-12 w-full">
+          <div className="flex flex-col sm:flex-row gap-x-10 gap-y-4 max-w-[1500px] mx-auto">
+            <div className="flex flex-col flex-1 gap-4">
+              <InviteDetails inviteData={inviteData} />
             </div>
+            <div className="flex flex-col flex-grow gap-x-6 gap-y-2 h-fit w-full md:max-w-xl xl:max-w-3xl sm:grid-cols-1 md:col-span-2">
+              <h3 className="col-span-full h-fit text-xl">Your Guest List</h3>
+              <div className="col-span-full flex flex-col gap-4">
+                {fields.map((field, index) => {
+                  return (
+                    <div key={index} className="overflow-none bg-white shadow rounded-lg">
+                      <div className="px-4 py-5 sm:p-6">
+                        <div className="flex flex-col gap-1 w-52">
+                          <span>First Name</span>
+                          <input
+                            disabled={index === 0}
+                            className={classNames(
+                              'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6',
+                              index === 0 && 'bg-gray-50 text-slate-700 border-gray-400',
+                            )}
+                            {...register(`rsvps.${index}.first_name`, { required: true, minLength: 1 })}
+                          />
+                        </div>
+                        <div className="flex flex-col gap-1 w-52">
+                          <span>Last Name</span>
+                          <input
+                            disabled={index === 0}
+                            className={classNames(
+                              'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6',
+                              index === 0 && 'bg-gray-50 text-slate-700 border-gray-400',
+                            )}
+                            {...register(`rsvps.${index}.last_name`, { required: true, minLength: 1 })}
+                          />
+                        </div>
+                        <div className="flex flex-col gap-1 w-64">
+                          <label htmlFor="Dietary Restrictions">Dietary Restrictions</label>
+                          <ComboBox name={`rsvps.${index}.dietary_restrictions`} />
+                        </div>
+                      </div>
+                      {index !== 0 && (
+                        <div className="relative  inset-y-[15px]">
+                          <div className="relative inset-1 flex justify-center">
+                            <button
+                              type="button"
+                              onClick={() => remove(index)}
+                              className="inline-flex items-center gap-x-1.5 active:bg-gray-100 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-slate-500 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="-ml-1 -mr-0.5 h-5 w-5 fill-slate-500"
+                                height="16"
+                                width="20"
+                                viewBox="0 0 640 512"
+                              >
+                                <path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM472 200H616c13.3 0 24 10.7 24 24s-10.7 24-24 24H472c-13.3 0-24-10.7-24-24s10.7-24 24-24z" />
+                              </svg>
+                              Remove Guest
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+                {fields.length <= inviteData?.guest_count && (
+                  <button
+                    disabled={fields.length > inviteData?.guest_count}
+                    onClick={() => {
+                      if (fields.length <= inviteData?.guest_count) {
+                        append({ first_name: '', last_name: '', dietary_restrictions: '' });
+                      }
+                    }}
+                    type="button"
+                    className="w-32 inline-flex disabled:bg-gray-400 items-center gap-x-2 rounded-md active:bg-green-700 bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                  >
+                    <svg className="-ml-0.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path
+                        fillRule="evenodd"
+                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    Add Guest
+                  </button>
+                )}
+              </div>
+            </div>
+            <div className="flex flex-1"></div>
           </div>
         </div>
-      </div>
-      <div className='fixed flex p-1 sm:p-2 justify-end bottom-0 right-0 bg-white border-t border-slate-300 drop-shadow-md w-full'>
-      <button
-              type='submit'
-              disabled={!isDirty}
-              className="w-32 flex justify-center disabled:bg-gray-400 items-center gap-x-2 rounded-md active:bg-green-700 bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-            >
-              {/* <svg
+        <div className="flex w-full h-20"></div>
+        <div className="fixed flex p-1 sm:p-2 justify-end bottom-0 right-0 bg-white border-t border-slate-300 drop-shadow-md w-full">
+          <button
+            type="button"
+            onClick={handleSubmit(onSubmit)}
+            disabled={!isDirty}
+            className="w-32 flex justify-center disabled:bg-gray-400 items-center gap-x-2 rounded-md active:bg-green-700 bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+          >
+            {/* <svg
                 className="-ml-0.5 h-5 w-5"
                 fill="currentColor"
                 aria-hidden="true"
@@ -276,10 +376,11 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
               >
                 <path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V173.3c0-17-6.7-33.3-18.7-45.3L352 50.7C340 38.7 323.7 32 306.7 32H64zm0 96c0-17.7 14.3-32 32-32H288c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V128zM224 288a64 64 0 1 1 0 128 64 64 0 1 1 0-128z" />
               </svg> */}
-              Save
-            </button>
-      </div>
-      <Toaster />
+            Save
+          </button>
+        </div>
+        <Toaster />
+      </FormProvider>
     </form>
   );
 };
