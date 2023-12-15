@@ -1,5 +1,5 @@
 import { classNames } from '@/functions/classNames.ts';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import toast, { Toaster } from 'react-hot-toast';
 function formatPhoneNumber(phoneNumber: string) {
@@ -18,6 +18,7 @@ function formatPhoneNumber(phoneNumber: string) {
   }
 }
 const InviteDetails = ({ inviteData }: any) => {
+  const [show, setShow] = useState(false);
   return (
     <div className="lg:col-start-3 lg:row-end-1">
       <div className="rounded-lg pb-4 bg-gray-50 shadow-sm ring-1 ring-gray-900/5">
@@ -29,12 +30,20 @@ const InviteDetails = ({ inviteData }: any) => {
             </dd>
           </div>
           <div className="flex-none self-end px-6 pt-4">
-            {inviteData.accepted !== undefined && inviteData.accepted !== null && (
-              <dd className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
-                Accepted
-              </dd>
-            )}
+            {/* {inviteData?.attending !== undefined && inviteData?.attending !== null && ( */}
+            <dd className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+              Attending
+            </dd>
+            {/* )} */}
           </div>
+          <div className="mt-4 flex w-full flex-none gap-x-4 px-6">
+            <dd className="text-sm leading-6 text-gray-700">
+              <span>Allowed Guests: </span>
+              <span>{inviteData?.guest_count}</span>
+            </dd>
+          </div>
+          {show && (
+          <>
           <div className="mt-4 flex w-full flex-none gap-x-4 px-6">
             <dd className="flex flex-row gap-2 text-sm leading-6 text-gray-700">
               <span>Contact:</span>
@@ -42,12 +51,6 @@ const InviteDetails = ({ inviteData }: any) => {
                 <span>{formatPhoneNumber(String(inviteData?.phone_number))}</span>
                 <span>{inviteData?.email}</span>
               </div>
-            </dd>
-          </div>
-          <div className="mt-4 flex w-full flex-none gap-x-4 px-6">
-            <dd className="text-sm leading-6 text-gray-700">
-              <span>Allowed Guests: </span>
-              <span>{inviteData?.guest_count}</span>
             </dd>
           </div>
           <div className="mt-4 flex w-full flex-none gap-x-4 px-6">
@@ -66,6 +69,15 @@ const InviteDetails = ({ inviteData }: any) => {
                 {inviteData.invite_id}
               </span>
             </dd>
+          </div>
+          </>
+          )}
+          <div className='flex items-center justify-center w-full'>
+<button
+        type="button"
+        onClick={() => setShow(!show)}
+        className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+      >Show {!show ? 'More' : 'Less'}</button>
           </div>
         </dl>
       </div>
@@ -154,16 +166,107 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
     }
   }, [fields]);
   return (
-    <form className="" onSubmit={handleSubmit(onSubmit)}>
-      <div className="space-y-12 p-3">
+    <form className="pb-8" onSubmit={handleSubmit(onSubmit)}>
+      <div className="space-y-12">
         <div className="grid grid-cols-1 gap-x-8 gap-y-2 border-b border-gray-900/10 pb-12 md:grid-cols-3">
           <div className="flex flex-col gap-4">
             <InviteDetails inviteData={inviteData} />
-            <button
+            
+          </div>
+          <div className="grid w-auto mx-0 max-w-2xl grid-cols-1 gap-x-6 gap-y-2 h-fit sm:grid-cols-1 md:col-span-2">
+            <h3 className="col-span-full h-fit text-xl">Your Guest List</h3>
+            <div className="col-span-full flex flex-col gap-4">
+              {fields.map((field, index) => {
+                return (
+                  <div key={index} className="overflow-none bg-white shadow rounded-lg">
+                    <div className="px-4 py-5 sm:p-6">
+                      <div className="flex flex-col gap-1">
+                        <span>First Name</span>
+                        <input
+                          disabled={index === 0}
+                          className={classNames(
+                            'max-w-fit text-black',
+                            index === 0 && 'bg-gray-50 text-slate-700 border-gray-400',
+                          )}
+                          {...register(`rsvps.${index}.first_name`)}
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <span>Last Name</span>
+                        <input
+                          disabled={index === 0}
+                          className={classNames(
+                            'max-w-fit text-black',
+                            index === 0 && 'bg-gray-50 text-slate-700 border-gray-400',
+                          )}
+                          {...register(`rsvps.${index}.last_name`)}
+                        />
+                      </div>
+                      <div className="flex flex-col gap-1">
+                        <span>Dietary Restrictions</span>
+                        <textarea
+                          className="max-w-sm min-h-[40px] text-black"
+                          {...register(`rsvps.${index}.dietary_restrictions`)}
+                        />
+                      </div>
+                    </div>
+                        {index !== 0 && (
+                    <div className="relative  inset-y-[15px]">
+                      <div className="relative inset-1 flex justify-center">
+                          <button
+                            type="button"
+                            onClick={() => remove(index)}
+                            className="inline-flex items-center gap-x-1.5 active:bg-gray-100 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-slate-500 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="-ml-1 -mr-0.5 h-5 w-5 fill-slate-500"
+                              height="16"
+                              width="20"
+                              viewBox="0 0 640 512"
+                            >
+                              <path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM472 200H616c13.3 0 24 10.7 24 24s-10.7 24-24 24H472c-13.3 0-24-10.7-24-24s10.7-24 24-24z" />
+                            </svg>
+                            Remove Guest
+                          </button>
+                      </div>
+                    </div>
+                        )}
+                  </div>
+                );
+              })}
+              {fields.length <= inviteData?.guest_count && (
+                <button
+                  disabled={fields.length > inviteData?.guest_count}
+                  onClick={() => {
+                    if (fields.length <= inviteData?.guest_count) {
+                      append({ first_name: '', last_name: '', dietary_restrictions: '' });
+                    }
+                  }}
+                  type="button"
+                  className="w-32 inline-flex disabled:bg-gray-400 items-center gap-x-2 rounded-md active:bg-green-700 bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                >
+                  <svg className="-ml-0.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path
+                      fillRule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  Add Guest
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className='fixed flex p-1 sm:p-2 justify-end bottom-0 right-0 bg-white border-t border-slate-300 drop-shadow-md w-full'>
+      <button
+              type='submit'
               disabled={!isDirty}
-              className="w-full flex justify-center disabled:bg-gray-400 items-center gap-x-2 rounded-md active:bg-green-700 bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+              className="w-32 flex justify-center disabled:bg-gray-400 items-center gap-x-2 rounded-md active:bg-green-700 bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
             >
-              <svg
+              {/* <svg
                 className="-ml-0.5 h-5 w-5"
                 fill="currentColor"
                 aria-hidden="true"
@@ -172,59 +275,9 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
                 viewBox="0 0 448 512"
               >
                 <path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V173.3c0-17-6.7-33.3-18.7-45.3L352 50.7C340 38.7 323.7 32 306.7 32H64zm0 96c0-17.7 14.3-32 32-32H288c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V128zM224 288a64 64 0 1 1 0 128 64 64 0 1 1 0-128z" />
-              </svg>
-              Save RSVP
+              </svg> */}
+              Save
             </button>
-          </div>
-          <div className="grid w-auto mx-0 max-w-2xl grid-cols-1 gap-x-6 gap-y-8 h-fit sm:grid-cols-1 md:col-span-2">
-            <h3 className="col-span-full h-fit text-3xl">RSVP</h3>
-            <div className="col-span-full flex flex-col gap-4">
-              {fields.map((field, index) => {
-                return (
-                  <div key={field.id}>
-                    <div className="flex flex-col gap-1">
-                      <span>First Name</span>
-                      <input disabled={index===0} className={classNames("max-w-fit text-black", index===0 && 'bg-gray-50 text-slate-700 border-gray-400')} {...register(`rsvps.${index}.first_name`)} />
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <span>Last Name</span>
-                      <input disabled={index===0} className={classNames("max-w-fit text-black", index===0 && 'bg-gray-50 text-slate-700 border-gray-400')} {...register(`rsvps.${index}.last_name`)} />
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <span>Dietary Restrictions</span>
-                      <textarea
-                        className="max-w-sm min-h-[40px] text-black"
-                        {...register(`rsvps.${index}.dietary_restrictions`)}
-                      />
-                    </div>
-                    {index !== 0 &&<button type="button" onClick={() => remove(index)}>
-                      Remove
-                    </button>}
-                  </div>
-                );
-              })}
-              {fields.length <= inviteData?.guest_count && <button
-                disabled={fields.length > inviteData?.guest_count}
-                onClick={() => {
-                  if (fields.length <= inviteData?.guest_count) {
-                    append({ first_name: '', last_name: '', dietary_restrictions: '' });
-                  }
-                }}
-                type="button"
-                className="w-32 inline-flex disabled:bg-gray-400 items-center gap-x-2 rounded-md active:bg-green-700 bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-              >
-                <svg className="-ml-0.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                Add Guest
-              </button>}
-            </div>
-          </div>
-        </div>
       </div>
       <Toaster />
     </form>

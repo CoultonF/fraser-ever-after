@@ -11,7 +11,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-
+**/_cacache/**
+.wrangler
+_*
 
 # environment variables
 .env
