@@ -1,0 +1,45 @@
+---
+import '@/styles/base.css';
+import CommonHead from '@/components/CommonHead.astro';
+import CommonBody from '@/components/CommonBody.astro';
+import Menu from '@/components/Menu.astro';
+import Header from '@/components/Header.astro';
+import Schedule from '@/components/Schedule.astro';
+import CommonCard from '@/components/CommonCard.astro';
+import stephanieBMA from '@/images/BMAA2139.jpeg';
+import coultonBMA from '@/images/BMAA3183.jpeg';
+import { Image } from 'astro:assets';
+---
+
+<html lang="en" class="bg-paper">
+  <head>
+    <meta charset="utf-8" />
+    <CommonHead />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <CommonBody>
+    <Header />
+    <Menu />
+    <div class="flex flex-col max-w-7xl mx-auto">
+      <div class="mx-auto flex flex-col">
+        <h1 class="font-serif text-7xl p-14 text-center">Our Story</h1>
+        <div class="grid grid-cols-1">
+          <CommonCard>
+            <h3>How we met</h3>
+            <p class="w-full text-center">
+              Lorem ipsum dolor sit amet asdf asdfhalksjdghpuh kjasdhlkh kasjdhflkjahsdf sdfdh
+            </p>
+          </CommonCard>
+          <CommonCard>
+            <h3>Meet the family</h3>
+            <p class="w-full text-center">Stephanie</p>
+          </CommonCard>
+          <CommonCard>
+            <h3>The proposal</h3>
+            <p class="w-full text-center">Stephanie</p>
+          </CommonCard>
+        </div>
+      </div>
+    </div>
+  </CommonBody>
+</html>

@@ -8,6 +8,7 @@ export default {
       },
       fontFamily: {
         serif: ['Handwritten', 'Calibri'],
+        sans: ['Helvetica', 'Arial'],
       },
       backgroundImage: {
         '404-image':

@@ -4,6 +4,7 @@ import '../styles/base.css';
 import { Faq } from '@/components/Faq.tsx';
 import Menu from '@/components/Menu.astro';
 import Header from '@/components/Header.astro';
+import CommonBody from '@/components/CommonBody.astro';
 ---
 
 <html class="bg-paper">
@@ -11,16 +12,10 @@ import Header from '@/components/Header.astro';
     <CommonHead />
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <title>Fraser Ever After</title>
   </head>
-  <body class="flex flex-col">
-    <div class="w-full h-auto overflow-auto">
-      <Header />
-      <Menu />
-      <div class="w-full">
-        <Faq client:load />
-      </div>
-    </div>
-  </body>
+  <CommonBody>
+    <Header />
+    <Menu />
+    <Faq client:load />
+  </CommonBody>
 </html>

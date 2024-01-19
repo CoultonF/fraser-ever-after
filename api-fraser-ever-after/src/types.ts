@@ -5,7 +5,7 @@ export const RsvpUpdateSchema = {
 	first_name: new Str(),
 	last_name: new Str(),
 	dietary_restrictions: new Str(),
-	main_dish: new Str({required: false, nullable: true}),
+	main_dish: new Str({required: false}),
 };
 
 export const InviteUpdateSchema = {

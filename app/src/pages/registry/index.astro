@@ -1,5 +1,6 @@
 ---
 import CommonHead from '@/components/CommonHead.astro';
+import CommonBody from '@/components/CommonBody.astro';
 import Menu from '@/components/Menu.astro';
 import Donate from '@/components/Donate.astro';
 import Header from '@/components/Header.astro';
@@ -11,14 +12,12 @@ import '../../styles/base.css';
     <CommonHead />
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <title>Fraser Ever After</title>
   </head>
-  <body class="flex flex-col">
-    <div class="w-full h-auto overflow-auto">
-      <Header />
-      <Menu />
-      <Donate />
+  <CommonBody>
+    <Header />
+    <Menu />
+    <div class="block mt-10">
+      <!-- <Donate /> -->
     </div>
-  </body>
+  </CommonBody>
 </html>

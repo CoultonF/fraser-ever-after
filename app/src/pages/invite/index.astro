@@ -3,6 +3,7 @@ import CommonHead from '@/components/CommonHead.astro';
 import '../../styles/base.css';
 import Header from '@/components/Header.astro';
 import Menu from '@/components/Menu.astro';
+import CommonBody from '@/components/CommonBody.astro';
 const errors = { inviteId: '' };
 if (Astro.request.method === 'POST') {
   try {
@@ -57,55 +58,51 @@ if (Astro.request.method === 'POST') {
     </script>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <title>Fraser Ever After</title>
   </head>
-  <body class="flex flex-col">
-    <div class="w-full h-auto overflow-auto">
-      <Header />
-      <Menu />
-      <main class="flex flex-col items-center w-full px-10">
-        <div class="max-w-prose gap-5 w-72 flex flex-col py-10 items-center">
-          <div class="w-full">
-            <label for="invite code" class="block text-sm font-medium leading-6 text-gray-900">Invite Code</label>
-            <div class="mt-2">
-              <input
-                type="text"
-                name="invite-id"
-                id="invite-id"
-                class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
-              />
-            </div>
+  <CommonBody>
+    <Header />
+    <Menu />
+    <main class="flex mt-10 flex-col items-center w-full px-10">
+      <div class="max-w-prose gap-5 w-72 flex flex-col py-10 items-center">
+        <div class="w-full">
+          <label for="invite code" class="block text-sm font-medium leading-6 text-gray-900">Invite Code</label>
+          <div class="mt-2">
+            <input
+              type="text"
+              name="invite-id"
+              id="invite-id"
+              class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+            />
           </div>
-          <button
-            type="button"
-            id="invite-button"
-            class="rounded-full bg-white w-52 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-500 hover:bg-gray-100 max-w-sm px-10 text-center"
-            >Continue</button
-          >
-          {
-            Astro.url.searchParams.get('error') === '1' && (
-              <div class="rounded-md bg-red-50 p-4">
-                <div class="flex">
-                  <div class="flex-shrink-0">
-                    <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path
-                        fill-rule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                  <div class="ml-3">
-                    <h3 class="text-sm font-medium text-red-800">Invalid Invite Code</h3>
-                  </div>
+        </div>
+        <button
+          type="button"
+          id="invite-button"
+          class="rounded-full bg-white w-52 py-2.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-500 hover:bg-gray-100 max-w-sm px-10 text-center"
+          >Continue</button
+        >
+        {
+          Astro.url.searchParams.get('error') === '1' && (
+            <div class="rounded-md bg-red-50 p-4">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </div>
+                <div class="ml-3">
+                  <h3 class="text-sm font-medium text-red-800">Invalid Invite Code</h3>
                 </div>
               </div>
-            )
-          }
-        </div>
-      </main>
-    </div>
-  </body>
+            </div>
+          )
+        }
+      </div>
+    </main>
+  </CommonBody>
 </html>

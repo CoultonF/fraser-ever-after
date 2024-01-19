@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook-form';
 import { ComboBox } from '@/components/ComboBox.tsx';
 import toast, { Toaster } from 'react-hot-toast';
-import { ErrorMessage } from "@hookform/error-message"
+import { ErrorMessage } from '@hookform/error-message';
 
 function formatPhoneNumber(phoneNumber: string) {
   // Remove any non-digit characters from the phone number
@@ -25,7 +25,7 @@ const InviteDetails = ({ inviteData }: any) => {
   const [show, setShow] = useState(false);
   return (
     <div className="lg:col-start-3 lg:row-end-1">
-      <div className="rounded-lg pb-4 bg-gray-50 shadow-sm ring-1 ring-gray-900/5">
+      <div className="rounded-lg pb-4 bg-white drop-shadow-md shadow-sm ring-1 ring-gray-900/5">
         <dl className="flex flex-wrap">
           <div className="flex-auto pl-6 pt-6">
             <dt className="text-sm font-semibold leading-6 text-gray-900">Invite Details</dt>
@@ -36,9 +36,9 @@ const InviteDetails = ({ inviteData }: any) => {
           <div className="flex w-auto mx-0 gap-x-2 items-center px-6 pt-4">
             <label htmlFor="attending">Attending:</label>
             <select
-              className="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              className="block w-32 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
               defaultValue={undefined}
-              {...register('invite.attending')}
+              {...register('invite.attending', { required: true })}
             >
               <option value="Yes">Yes</option>
               <option value="No">No</option>
@@ -106,39 +106,6 @@ const InviteDetails = ({ inviteData }: any) => {
   );
 };
 export const RsvpForm = ({ inviteData, guestData }: any) => {
-  const notifyError = () =>
-    toast.custom(t => (
-      <div className="rounded-md bg-green-50 p-4 absolute">
-        <div className="flex">
-          <div className="flex-shrink-0">
-            <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-          <div className="ml-3">
-            <p className="text-sm font-medium text-green-800">Error Unable to Save</p>
-          </div>
-          <div className="ml-auto pl-3">
-            <div className="-mx-1.5 -my-1.5">
-              <button
-                onClick={() => toast.remove(t.id)}
-                type="button"
-                className="inline-flex rounded-md bg-green-50 p-1.5 text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-green-50"
-              >
-                <span className="sr-only">Dismiss</span>
-                <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                  <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    ));
   const notify = () =>
     toast.custom(t => (
       <div className="rounded-md bg-green-50 p-4 absolute">
@@ -270,15 +237,15 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
       <FormProvider {...methods}>
         <div className="space-y-12 w-full">
           <div className="flex flex-col sm:flex-row gap-x-10 gap-y-4 max-w-[1500px] mx-auto">
-            <div className="flex flex-col flex-1 gap-4">
+            <div className="flex flex-col flex-1 gap-4 min-w-min">
               <InviteDetails inviteData={inviteData} />
             </div>
             <div className="flex flex-col flex-grow gap-x-6 gap-y-2 h-fit w-full md:max-w-xl xl:max-w-3xl sm:grid-cols-1 md:col-span-2">
               <h3 className="col-span-full h-fit text-xl">Your Guest List</h3>
-              <div className="col-span-full flex flex-col gap-4">
+              <div className="col-span-full flex flex-col gap-4 w-min-fit">
                 {fields.map((field, index) => {
                   return (
-                    <div key={index} className="overflow-none bg-white shadow rounded-lg">
+                    <div key={index} className=" bg-white shadow rounded-lg drop-shadow-md ">
                       <div className="px-4 py-5 sm:p-6">
                         <div className="flex flex-col gap-1 w-52">
                           <span>First Name</span>
@@ -301,6 +268,17 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
                             )}
                             {...register(`rsvps.${index}.last_name`, { required: true, minLength: 1 })}
                           />
+                        </div>
+                        <div className="flex flex-col gap-1 w-64">
+                          <label htmlFor="Main Dish" className="">Main Dish</label>
+                          <select
+                            className="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            {...register(`rsvps.${index}.main_dish`, { required: false })}
+                          >
+                            <option>Chicken Fingers</option>
+                            <option>Wagyu Beef</option>
+                            <option>Cabbage Rolls</option>
+                          </select>
                         </div>
                         <div className="flex flex-col gap-1 w-64">
                           <label htmlFor="Dietary Restrictions">Dietary Restrictions</label>

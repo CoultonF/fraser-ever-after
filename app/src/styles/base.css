@@ -16,7 +16,7 @@
 }
 
 html {
-  @apply my-0 flex h-auto w-full flex-col scroll-smooth text-base antialiased;
+  @apply my-0 flex h-auto w-screen flex-col scroll-smooth text-base antialiased;
 }
 
 body {

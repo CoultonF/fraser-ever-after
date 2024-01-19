@@ -4,6 +4,8 @@ import Home from '@/components/Home.astro';
 import Menu from '@/components/Menu.astro';
 import Header from '../components/Header.astro';
 import '../styles/base.css';
+import CommonBody from '@/components/CommonBody.astro';
+import SaveTheDate from '@/components/SaveTheDate.astro';
 ---
 
 <html lang="en" class="bg-paper">
@@ -11,14 +13,12 @@ import '../styles/base.css';
     <meta charset="utf-8" />
     <CommonHead />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <title>Fraser Ever After</title>
   </head>
-  <body class="flex flex-col">
-    <div class="w-full h-auto overflow-auto">
-      <Header />
-      <Menu />
-      <Home />
+  <CommonBody>
+    <!-- <Header /> -->
+    <!-- <Menu /> -->
+    <div class="flex flex-col items-center align-middle justify-between">
+      <SaveTheDate />
     </div>
-  </body>
+  </CommonBody>
 </html>

@@ -1,4 +1,5 @@
 import { Disclosure } from '@headlessui/react';
+import {CommonCard} from '@/components/CommonCard.tsx';
 
 const faqs = [
   {
@@ -22,9 +23,8 @@ const faqs = [
 
 export const Faq = () => {
   return (
-    <div className="bg-white">
-      <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8 lg:py-40">
-        <div className="mx-auto max-w-4xl divide-y divide-gray-900/10">
+    <CommonCard>
+        <div className="w-fit max-w-4xl divide-y divide-gray-900/10">
           <h2 className="text-2xl font-bold leading-10 tracking-tight text-gray-900">Frequently asked questions</h2>
           <dl className="mt-10 space-y-6 divide-y divide-gray-900/10">
             {faqs.map(faq => (
@@ -70,7 +70,6 @@ export const Faq = () => {
             ))}
           </dl>
         </div>
-      </div>
-    </div>
+</CommonCard>
   );
 };

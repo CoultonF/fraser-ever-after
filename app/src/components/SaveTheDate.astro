@@ -1,0 +1,48 @@
+---
+import { Image } from 'astro:assets';
+import flowerCircle from '../images/temp.png';
+---
+
+<div class="w-full mx-auto mt-20 mb-0 justify-center align-middle items-center max-w-3xl relative flex">
+  <div class="w-full aspect-square flex mx-auto absolute inset-0 z-20">
+    <Image
+      loading="eager"
+      src={flowerCircle}
+      class="inset-0 object-contain absolute overflow-clip scale-125 origin-center"
+      alt="A floral wreath with a circle in the center."
+    />
+  </div>
+  <div class="w-full aspect-square flex absolute inset-0 z-10">
+    <div
+      class="overflow-hidden flex border border-gray-600 flex-col bg-white drop-shadow-lg aspect-square w-full rounded-full align-middle gap-2 sm:gap-4 md:gap-4 lg:gap-6 justify-center"
+    >
+    </div>
+  </div>
+  <div class="w-full aspect-square flex absolute inset-0 z-30">
+    <div
+      class="overflow-hidden flex flex-col drop-shadow-lg aspect-square w-full rounded-full align-middle gap-2 sm:gap-4 md:gap-4 lg:gap-6 justify-center"
+    >
+      <h3 class="w-full text-center px-auto text-4xl lg:text-7xl font-bold font-serif">Save the Date</h3>
+      <p class="w-full text-center px-auto text-sm lg:text-base font-sans uppercase tracking-widest">
+        for the wedding of
+      </p>
+      <div class="flex w-full mx-auto flex-col md:gap-2 item-center">
+        <p class="w-full text-center px-auto text-2xl md:text-4xl lg:text-4xl font-semibold font-serif tracking-wide">
+          Stephanie Krieger
+        </p>
+        <p class="w-full text-center px-auto text-2xl md:text-4xl lg:text-4xl font-semibold font-serif tracking-wide">
+          &
+        </p>
+        <p class="w-full text-center px-auto text-2xl md:text-4xl lg:text-4xl font-semibold font-serif tracking-wide">
+          Coulton Fraser
+        </p>
+      </div>
+      <h3 class="w-full text-center px-auto text-3xl md:text-5xl lg:text-6xl font-semibold font-serif">
+        August 11, 2024
+      </h3>
+      <h3 class="w-full text-center px-auto text-sm lg:text-base font-sans tracking-widest">
+        Flores & Pine, Calgary, Alberta
+      </h3>
+    </div>
+  </div>
+</div>
