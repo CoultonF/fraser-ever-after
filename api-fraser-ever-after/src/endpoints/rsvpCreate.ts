@@ -46,9 +46,9 @@ export class RsvpCreate extends OpenAPIRoute {
 			}
 			rsvpBatches.push(
 				env.DB.prepare(
-					"insert into rsvp (first_name, last_name, dietary_restrictions) values (?,?,?) returning rsvp_id"
+					"insert into rsvp (first_name, last_name, dietary_restrictions, main_dish) values (?,?,?,?) returning rsvp_id"
 					).bind(
-						rsvp.first_name, rsvp.last_name, dr
+						rsvp.first_name, rsvp.last_name, dr, rsvp.main_dish
 						)
 			)
 		})

@@ -25,7 +25,7 @@ const InviteDetails = ({ inviteData }: any) => {
   const [show, setShow] = useState(false);
   return (
     <div className="lg:col-start-3 lg:row-end-1">
-      <div className="rounded-lg pb-4 bg-white drop-shadow-md shadow-sm ring-1 ring-gray-900/5">
+      <div className="rounded-lg pb-4 bg-white ring-1 ring-gray-900/5">
         <dl className="flex flex-wrap">
           <div className="flex-auto pl-6 pt-6">
             <dt className="text-sm font-semibold leading-6 text-gray-900">Invite Details</dt>
@@ -145,12 +145,9 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
         method: 'POST',
         body: JSON.stringify(createData),
       });
-    } catch (e) {
-      console.error(e);
-    }
+    } catch (e) {}
   };
   const updateRsvp = async (updateData: any) => {
-    console.log({ updateData });
     await fetch(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/rsvp/update`, {
       method: 'POST',
       body: JSON.stringify(updateData),
@@ -182,7 +179,6 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
   });
   const onSubmit = async (data: any, e) => {
     e.preventDefault();
-    console.log({ data });
     const createRsvps = data.rsvps.filter(v => v?.rsvp_id === undefined);
     const existingIds = guestData.map(v => v.rsvp_id);
     const deleteRsvps = guestData.filter(
@@ -207,9 +203,10 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
     };
     const deleteData = deleteRsvps.map(v => v?.rsvp_id);
     try {
-      await createRsvp(createData);
-      await updateRsvp(updateData);
+      console.log({ createData, updateData, deleteData });
       await deleteRsvp(deleteData);
+      await updateRsvp(updateData);
+      await createRsvp(createData);
       reset(data, { keepValues: true });
       notify();
     } catch (e) {
@@ -231,7 +228,6 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
       });
     }
   }, [fields]);
-  console.log({ inviteData });
   return (
     <form className="w-full flex flex-col" onSubmit={handleSubmit(onSubmit)}>
       <FormProvider {...methods}>
@@ -245,7 +241,7 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
               <div className="col-span-full flex flex-col gap-4 w-min-fit">
                 {fields.map((field, index) => {
                   return (
-                    <div key={index} className=" bg-white shadow rounded-lg drop-shadow-md ">
+                    <div key={index} className=" bg-white  rounded-lg ">
                       <div className="px-4 py-5 sm:p-6">
                         <div className="flex flex-col gap-1 w-52">
                           <span>First Name</span>
@@ -270,10 +266,12 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
                           />
                         </div>
                         <div className="flex flex-col gap-1 w-64">
-                          <label htmlFor="Main Dish" className="">Main Dish</label>
+                          <label htmlFor="Main Dish" className="">
+                            Main Dish
+                          </label>
                           <select
                             className="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            {...register(`rsvps.${index}.main_dish`, { required: false })}
+                            {...register(`rsvps.${index}.main_dish`, { required: true })}
                           >
                             <option>Chicken Fingers</option>
                             <option>Wagyu Beef</option>
@@ -315,7 +313,7 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
                     disabled={fields.length > inviteData?.guest_count}
                     onClick={() => {
                       if (fields.length <= inviteData?.guest_count) {
-                        append({ first_name: '', last_name: '', dietary_restrictions: '' });
+                        append({ first_name: '', last_name: '', dietary_restrictions: '', main_dish: '' });
                       }
                     }}
                     type="button"
@@ -337,14 +335,15 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
           </div>
         </div>
         <div className="flex w-full h-20"></div>
-        <div className="fixed flex p-1 sm:p-2 justify-end bottom-0 right-0 bg-white border-t border-slate-300 drop-shadow-md w-full">
-          <button
-            type="button"
-            onClick={handleSubmit(onSubmit)}
-            disabled={!isDirty}
-            className="w-32 flex justify-center disabled:bg-gray-400 items-center gap-x-2 rounded-md active:bg-green-700 bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
-          >
-            {/* <svg
+        <div className="fixed flex p-1 sm:p-2 justify-center bottom-0 right-0 bg-white border-t border-slate-300 drop-shadow-md w-full">
+          <div className="flex w-full md:max-w-xl xl:max-w-3xl mr-0 justify-end">
+            <button
+              type="button"
+              onClick={handleSubmit(onSubmit)}
+              disabled={!isDirty}
+              className="w-32 flex justify-center disabled:bg-gray-400 items-center gap-x-2 rounded-md active:bg-green-700 bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+            >
+              {/* <svg
                 className="-ml-0.5 h-5 w-5"
                 fill="currentColor"
                 aria-hidden="true"
@@ -354,8 +353,9 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
               >
                 <path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V173.3c0-17-6.7-33.3-18.7-45.3L352 50.7C340 38.7 323.7 32 306.7 32H64zm0 96c0-17.7 14.3-32 32-32H288c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V128zM224 288a64 64 0 1 1 0 128 64 64 0 1 1 0-128z" />
               </svg> */}
-            Save
-          </button>
+              Save
+            </button>
+          </div>
         </div>
         <Toaster />
       </FormProvider>
