@@ -1,9 +1,54 @@
 import { classNames } from '@/functions/classNames.ts';
 import { useEffect, useState } from 'react';
-import { FormProvider, useFieldArray, useForm, useFormContext } from 'react-hook-form';
+import { FormProvider, useFieldArray, useForm, useFormContext, useWatch } from 'react-hook-form';
 import { ComboBox } from '@/components/ComboBox.tsx';
 import toast, { Toaster } from 'react-hot-toast';
 import { ErrorMessage } from '@hookform/error-message';
+
+function useApiData<T>(url: string, initialData:T|null = null): {data:T | null, isLoading:boolean, isSuccess:boolean, refetchData:() => void, refetchDataAsync:() => Promise<void>} {
+  const [data, setData] = useState<T | null>(initialData);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      const jsonData = await response.json();
+      setData(jsonData);
+      setIsSuccess(true);
+    } catch (error) {
+      setIsSuccess(false);
+      console.error('Error fetching data:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const refetchData = () => {
+    setIsSuccess(false);
+    setIsLoading(true)
+    fetchData();
+  };
+
+  const refetchDataAsync = async () => {
+    setIsSuccess(false);
+    setIsLoading(true)
+    await fetchData();
+  }
+
+  return {data:data, isLoading:isLoading, isSuccess:isSuccess, refetchData:refetchData, refetchDataAsync:refetchDataAsync};
+}
 
 function formatPhoneNumber(phoneNumber: string) {
   // Remove any non-digit characters from the phone number
@@ -21,17 +66,32 @@ function formatPhoneNumber(phoneNumber: string) {
   }
 }
 const InviteDetails = ({ inviteData }: any) => {
-  const { control, register } = useFormContext();
-  const [show, setShow] = useState(false);
+  const { control, register} = useFormContext();
+  const invites = useWatch({ control, name: 'rsvps' })
+  const remainingInvites = inviteData?.guest_count - invites.length + 1 
   return (
     <div className="lg:col-start-3 lg:row-end-1">
-      <div className="rounded-lg pb-4 bg-white ring-1 ring-gray-900/5">
+      <div className="rounded-lg pb-4 bg-white ring-1 lg:ml-5 ring-gray-900/5">
         <dl className="flex flex-wrap">
           <div className="flex-auto pl-6 pt-6">
             <dt className="text-sm font-semibold leading-6 text-gray-900">Invite Details</dt>
-            <dd className="mt-1 text-base font-semibold leading-6 text-gray-900">
-              {inviteData.first_name} {inviteData.last_name}
-            </dd>
+              <dd className="mt-1 text-base font-semibold pr-1 leading-6 text-gray-900 whitespace-pre-line">
+            {(invites ?? []).map((v, index) => {
+              if (index === invites.length - 1) {
+                return v?.first_name;
+              } else if (index === invites.length - 2) {
+                return v?.first_name + ' &\n';
+              } else {
+                return v?.first_name + ',\n';
+              }
+            }).join('')}
+
+              </dd>
+            {remainingInvites > 0 && (
+              <dd className="mt-1 text-base font-semibold leading-6 text-gray-900">
+                + {remainingInvites} more
+              </dd>
+            )}
           </div>
           <div className="flex w-auto mx-0 gap-x-2 items-center px-6 pt-4">
             <label htmlFor="attending">Attending:</label>
@@ -42,7 +102,6 @@ const InviteDetails = ({ inviteData }: any) => {
             >
               <option value="Yes">Yes</option>
               <option value="No">No</option>
-              <option value="Maybe">Maybe</option>
             </select>
             {/* {inviteData?.attending !== undefined && inviteData?.attending !== null && ( */}
             {/* <dd className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
@@ -50,62 +109,14 @@ const InviteDetails = ({ inviteData }: any) => {
             </dd> */}
             {/* )} */}
           </div>
-          <div className="mt-4 flex w-full flex-none gap-x-4 px-6">
-            <dd className="text-sm leading-6 text-gray-700">
-              <span>Allowed Guests: </span>
-              <span>
-                {inviteData.first_name} + {inviteData?.guest_count}
-              </span>
-            </dd>
-          </div>
-          {show && (
-            <>
-              <div className="mt-4 flex w-full flex-none gap-x-4 px-6">
-                <dd className="flex flex-row gap-2 text-sm leading-6 text-gray-700">
-                  <span>Contact:</span>
-                  <div className="flex flex-col">
-                    <span>{formatPhoneNumber(String(inviteData?.phone_number))}</span>
-                    <span>{inviteData?.email}</span>
-                  </div>
-                </dd>
-              </div>
-              <div className="mt-4 flex w-full flex-none gap-x-4 px-6">
-                <dd className="text-sm flex flex-col overflow-clip leading-6 text-black">
-                  <div className="flex flex-row justify-between">
-                    <span className="font-semibold">Invite Id</span>
-                    <button
-                      type="button"
-                      className="active:bg-slate-200 rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                      onClick={() => navigator.clipboard.writeText(inviteData.invite_id)}
-                    >
-                      Copy Invite Id
-                    </button>
-                  </div>
-                  <span
-                    className="w-auto mx-0 whitespace-nowrap overflow-clip text-ellipsis"
-                    title={inviteData.invite_id}
-                  >
-                    {inviteData.invite_id}
-                  </span>
-                </dd>
-              </div>
-            </>
-          )}
-          <div className="flex items-center justify-center w-full">
-            <button
-              type="button"
-              onClick={() => setShow(!show)}
-              className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-            >
-              Show {!show ? 'More' : 'Less'}
-            </button>
-          </div>
         </dl>
       </div>
     </div>
   );
 };
 export const RsvpForm = ({ inviteData, guestData }: any) => {
+  const {data: rsvpApiData,isSuccess:rsvpSuccess,refetchDataAsync:refetchAsyncRsvp} = useApiData(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/rsvp/${inviteData.invite_id}`, guestData);
+  const {data: inviteApiData, isSuccess: inviteSuccess, refetchDataAsync: refetchAsyncInvite} = useApiData(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/invite/${inviteData.invite_id}`, inviteData);
   const notify = () =>
     toast.custom(t => (
       <div className="rounded-md bg-green-50 p-4 absolute">
@@ -161,8 +172,8 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
   };
   const methods = useForm({
     defaultValues: {
-      invite: inviteData,
-      rsvps: guestData,
+      invite: inviteApiData,
+      rsvps: rsvpApiData,
     },
     criteriaMode: 'all',
   });
@@ -170,18 +181,20 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
     handleSubmit,
     control,
     register,
-    formState: { isDirty, errors },
+    formState: { isDirty, isSubmitSuccessful },
     reset,
   } = methods;
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'rsvps',
   });
+  const [saving, setSaving] = useState("Save");
   const onSubmit = async (data: any, e) => {
     e.preventDefault();
+    setSaving('Saving...');
     const createRsvps = data.rsvps.filter(v => v?.rsvp_id === undefined);
-    const existingIds = guestData.map(v => v.rsvp_id);
-    const deleteRsvps = guestData.filter(
+    const existingIds = rsvpApiData.map(v => v.rsvp_id);
+    const deleteRsvps = rsvpApiData.filter(
       v =>
         !data.rsvps
           .filter(v => v?.rsvp_id !== undefined)
@@ -207,7 +220,9 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
       await deleteRsvp(deleteData);
       await updateRsvp(updateData);
       await createRsvp(createData);
-      reset(data, { keepValues: true });
+      setSaving('Saved');
+      await refetchAsyncInvite();
+      await refetchAsyncRsvp();
       notify();
     } catch (e) {
       // toast.error('ERROR: Unable to save.');
@@ -228,6 +243,19 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
       });
     }
   }, [fields]);
+  useEffect(()  => {
+    if(isSubmitSuccessful && inviteSuccess && rsvpSuccess) {
+      reset({invite:inviteApiData, rsvps:rsvpApiData});
+    }
+  },[isSubmitSuccessful, rsvpSuccess, inviteSuccess])
+
+  useEffect(() => {
+    if(isDirty) {
+      setSaving('Save')
+    }
+  },[isDirty])
+
+
   return (
     <form className="w-full flex flex-col" onSubmit={handleSubmit(onSubmit)}>
       <FormProvider {...methods}>
@@ -237,12 +265,12 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
               <InviteDetails inviteData={inviteData} />
             </div>
             <div className="flex flex-col flex-grow gap-x-6 gap-y-2 h-fit w-full md:max-w-xl xl:max-w-3xl sm:grid-cols-1 md:col-span-2">
-              <h3 className="col-span-full h-fit text-xl">Your Guest List</h3>
+              <h3 className="col-span-full h-fit text-xl mx-auto sm:ml-5">Your Guest List</h3>
               <div className="col-span-full flex flex-col gap-4 w-min-fit">
                 {fields.map((field, index) => {
                   return (
                     <div key={index} className=" bg-white  rounded-lg ">
-                      <div className="px-4 py-5 sm:p-6">
+                      <div className="flex flex-col gap-2 px-4 py-5 sm:p-6">
                         <div className="flex flex-col gap-1 w-52">
                           <span>First Name</span>
                           <input
@@ -353,7 +381,7 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
               >
                 <path d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V173.3c0-17-6.7-33.3-18.7-45.3L352 50.7C340 38.7 323.7 32 306.7 32H64zm0 96c0-17.7 14.3-32 32-32H288c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V128zM224 288a64 64 0 1 1 0 128 64 64 0 1 1 0-128z" />
               </svg> */}
-              Save
+              {saving }
             </button>
           </div>
         </div>

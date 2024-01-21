@@ -37,6 +37,6 @@ export class RsvpFetch extends OpenAPIRoute {
   }
 		const { inviteId } = data.params;
 		const {results: inviteResults} = await env.DB.prepare("select rsvp.* from invite join invite_rsvp using (invite_id) join rsvp using (rsvp_id) where invite_id = ?").bind(inviteId).all()
-		return new Response(JSON.stringify(inviteResults), {status:200, header: headers})
+		return new Response(JSON.stringify(inviteResults), {headers: headers})
 	}
 }

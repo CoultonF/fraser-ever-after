@@ -19,6 +19,10 @@ html {
   @apply my-0 flex h-auto w-screen flex-col scroll-smooth text-base antialiased;
 }
 
+html * {
+  @apply min-w-0;
+}
+
 body {
   @apply flex w-full flex-col;
 }

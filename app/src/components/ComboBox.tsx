@@ -18,8 +18,10 @@ export const ComboBox = ({
     'Fish Allergy',
     'Dairy Allergy',
   ],
+  disabled = false,
   name,
 }) => {
+  const scrollRef = useRef<HTMLButtonElement | null>(null);
   const buttonRef = useRef<HTMLInputElement | null>(null);
   const { control, getValues, setValue } = useFormContext();
   const selectedPersonDefaults = getValues(name).split(', ');
@@ -41,15 +43,24 @@ export const ComboBox = ({
   }, [selectedPersonWatch]);
 
   return (
-    <Listbox multiple as="div" value={selectedPerson} onChange={setSelectedPerson}>
+    <Listbox multiple as="div" value={selectedPerson} onChange={setSelectedPerson} disabled={disabled}>
       <div className="relative">
-        <Listbox.Button className="text-ellipsis overflow-hidden w-full flex h-8 rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+        <Listbox.Button
+          ref={scrollRef}
+          onClick={async () => {
+            //timeout to allow the listbox to render
+            await new Promise(resolve => setTimeout(resolve, 100));
+          scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          }
+          }
+          className="text-ellipsis overflow-hidden w-full flex h-8 rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+        >
           <span className="block truncate" title={selectedPersonWatch}>
             {selectedPersonWatch}
           </span>
         </Listbox.Button>
         {allOptions.length > 0 && (
-          <Listbox.Options className="absolute flex flex-col z-20 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+          <Listbox.Options className="overscroll-auto absolute flex flex-col z-20 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
             {allOptions.map(person => (
               <Listbox.Option
                 key={person}
@@ -57,8 +68,8 @@ export const ComboBox = ({
                 value={person}
                 className={({ active, disabled }) =>
                   classNames(
-                    'relative flex cursor-default select-none py-2 pl-3 pr-9',
-                    active ? 'bg-indigo-600 text-white' : 'text-gray-900',
+                    'relative flex cursor-default border-b border-slate-500 select-none py-2 pl-3 pr-9',
+                    active ? 'bg-sky-600 text-white' : 'text-gray-900',
                     disabled && 'opacity-50 cursor-not-allowed',
                   )
                 }
@@ -71,7 +82,7 @@ export const ComboBox = ({
                       <span
                         className={classNames(
                           'absolute inset-y-0 right-0 flex items-center pr-4',
-                          active ? 'text-white' : 'text-indigo-600',
+                          active ? 'text-white' : 'text-sky-600',
                         )}
                       >
                         <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -89,6 +100,7 @@ export const ComboBox = ({
             ))}
 
             {!selectedPerson.includes('None') && (
+<>
               <div className="flex w-full flex-row gap-x-1 relative">
                 <input
                   title="Create a new tag"
@@ -128,6 +140,7 @@ export const ComboBox = ({
                   Add Option
                 </button>
               </div>
+              </>
             )}
           </Listbox.Options>
         )}
