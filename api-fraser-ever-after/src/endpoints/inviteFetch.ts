@@ -1,7 +1,7 @@
 import {
-	OpenAPIRoute,
-	OpenAPIRouteSchema,
-	Path,
+  OpenAPIRoute,
+  OpenAPIRouteSchema,
+  Path,
 } from "@cloudflare/itty-router-openapi";
 import { corsHeaders as headers } from "cors";
 export interface Env {
@@ -10,32 +10,35 @@ export interface Env {
   DB: D1Database;
 }
 
-
 export class InviteFetch extends OpenAPIRoute {
-	static schema: OpenAPIRouteSchema = {
-		tags: ["RSVP"],
-		summary: "Fetch invite",
-		parameters: {
-			inviteId: Path(String, {
-				description: "Invite id",
-			}),
-		},
-	};
+  static schema: OpenAPIRouteSchema = {
+    tags: ["RSVP"],
+    summary: "Fetch invite",
+    parameters: {
+      inviteId: Path(String, {
+        description: "Invite id",
+      }),
+    },
+  };
 
-	async handle(
-		request: Request,
-		env: Env,
-		context: any,
-		data: Record<string, any>
-	) {
-		// Retrieve the validated request body
+  async handle(
+    request: Request,
+    env: Env,
+    context: any,
+    data: Record<string, any>,
+  ) {
+    // Retrieve the validated request body
 
-  // Check if it's a preflight request (OPTIONS) and respond accordingly
-  if (request.method === 'OPTIONS') {
-    return new Response(null, { headers: headers });
+    // Check if it's a preflight request (OPTIONS) and respond accordingly
+    if (request.method === "OPTIONS") {
+      return new Response(null, { headers: headers });
+    }
+    const { inviteId } = data.params;
+    const { results: inviteResults } = await env.DB.prepare(
+      "select invite.* from invite where invite_id = ?",
+    )
+      .bind(inviteId)
+      .all();
+    return new Response(JSON.stringify(inviteResults), { headers: headers });
   }
-		const { inviteId } = data.params;
-		const {results: inviteResults} = await env.DB.prepare("select invite.* from invite where invite_id = ?").bind(inviteId).all()
-		return new Response(JSON.stringify(inviteResults), {headers: headers});
-	}
 }
