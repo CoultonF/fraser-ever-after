@@ -9,5 +9,9 @@ document.addEventListener('astro:page-load', () => {
     if (rsvpEl) {
       rsvpEl.href = `/invite${typeof storedValue === 'string' ? '/' + storedValue : ''}`;
     }
+    const triviaEl = document.getElementById('trivia-menu-href') as HTMLAnchorElement;
+    if (triviaEl) {
+      triviaEl.href = `/trivia${typeof storedValue === 'string' ? '/' + storedValue : ''}`;
+    }
   }
 });

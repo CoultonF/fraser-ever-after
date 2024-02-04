@@ -40,6 +40,10 @@ export class RsvpFetch extends OpenAPIRoute {
     )
       .bind(inviteId)
       .all();
-    return new Response(JSON.stringify(inviteResults), { headers: headers });
+    const responseHeaders = {
+      ...headers,
+      "Content-Type": "application/json",
+    };
+    return new Response(JSON.stringify(inviteResults), { headers: responseHeaders });
   }
 }

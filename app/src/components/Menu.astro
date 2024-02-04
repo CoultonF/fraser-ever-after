@@ -1,7 +1,7 @@
 ---
 import { classNames } from '@/functions/classNames.ts';
 const active = (url: string) => {
-  if (url.startsWith('/invite')) {
+  if (url.startsWith('/invite') || url.startsWith('/trivia')) {
     return classNames(Astro.url.pathname.includes(url) ? 'font-bold' : '');
   }
   return classNames(url === Astro.url.pathname ? 'font-bold' : '');
@@ -12,6 +12,7 @@ const active = (url: string) => {
   class="flex flex-row md:gap-10 gap-3 sm:text-base text-sm border-b border-black pb-5 w-full items-center justify-center"
 >
   <a class={active('/')} href="/">Save The Date</a>
+  <a class={active('/trivia')} id="trivia-menu-href" href="/trivia">Trivia</a>
   <a class={active('/invite')} id="invite-menu-href">RSVP</a>
   <a class={active('/schedule')} href="/schedule">Schedule</a>
   <a class={active('/faq')} href="/faq">FAQ</a>

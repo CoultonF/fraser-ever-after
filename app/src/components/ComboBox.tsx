@@ -50,9 +50,8 @@ export const ComboBox = ({
           onClick={async () => {
             //timeout to allow the listbox to render
             await new Promise(resolve => setTimeout(resolve, 100));
-          scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-          }
-          }
+            scrollRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }}
           className="text-ellipsis overflow-hidden w-full flex h-8 rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
         >
           <span className="block truncate" title={selectedPersonWatch}>
@@ -100,46 +99,46 @@ export const ComboBox = ({
             ))}
 
             {!selectedPerson.includes('None') && (
-<>
-              <div className="flex w-full flex-row gap-x-1 relative">
-                <input
-                  title="Create a new tag"
-                  placeholder="Specify other..."
-                  ref={buttonRef}
-                  onKeyDown={e => {
-                    if (e.key === ' ') {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      buttonRef.current.value += ' ';
-                    }
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      e.stopPropagation();
+              <>
+                <div className="flex w-full flex-row gap-x-1 relative">
+                  <input
+                    title="Create a new tag"
+                    placeholder="Specify other..."
+                    ref={buttonRef}
+                    onKeyDown={e => {
+                      if (e.key === ' ') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        buttonRef.current.value += ' ';
+                      }
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const value = buttonRef.current?.value.replace(', ', ' ');
+                        if (value && !selectedPerson.includes(value)) {
+                          setSelectedPerson([...selectedPerson, value]);
+                          buttonRef.current.value = '';
+                        }
+                      }
+                    }}
+                    className={classNames(
+                      'flex w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
+                    )}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
                       const value = buttonRef.current?.value.replace(', ', ' ');
                       if (value && !selectedPerson.includes(value)) {
                         setSelectedPerson([...selectedPerson, value]);
                         buttonRef.current.value = '';
                       }
-                    }
-                  }}
-                  className={classNames(
-                    'flex w-full border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6',
-                  )}
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    const value = buttonRef.current?.value.replace(', ', ' ');
-                    if (value && !selectedPerson.includes(value)) {
-                      setSelectedPerson([...selectedPerson, value]);
-                      buttonRef.current.value = '';
-                    }
-                  }}
-                  className="absolute right-1 top-1.5  rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                >
-                  Add Option
-                </button>
-              </div>
+                    }}
+                    className="absolute right-1 top-1.5  rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                  >
+                    Add Option
+                  </button>
+                </div>
               </>
             )}
           </Listbox.Options>

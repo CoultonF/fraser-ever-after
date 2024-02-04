@@ -6,4 +6,4 @@ workers_dev = true
 [[d1_databases]]
 binding = "DB"
 database_name = "FRASER_EVER_AFTER"
-database_id = "f658d2a3-2626-44e1-b896-9765a817c9d4"
+database_id = "02a43192-2fde-445b-9714-66034006cccb"

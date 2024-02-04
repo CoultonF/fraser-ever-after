@@ -46,6 +46,7 @@ if (inviteData.length === 0) {
     <CommonHead />
     <script>
       const storedValue = localStorage.getItem('inviteId');
+      console.log({ storedValue });
       const invEl = document.getElementById('invite-menu-href') as HTMLAnchorElement;
       if (invEl) {
         invEl.href = `/invite${typeof storedValue === 'string' ? '/' + storedValue : ''}`;
