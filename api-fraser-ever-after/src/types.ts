@@ -1,4 +1,4 @@
-import { DateTime, Str } from "@cloudflare/itty-router-openapi";
+import { DateTime, Str, Int } from "@cloudflare/itty-router-openapi";
 
 export const RsvpUpdateSchema = {
   rsvp_id: Number,
@@ -40,4 +40,9 @@ export const Invite = {
   invite_id: new Str({ required: true }),
   attending: new Str({ required: true }),
   rsvps: [Rsvp],
+};
+
+export const TriviaCreate = {
+  trivia_id: new Int({ required: true }),
+  choice_id: new Int({ required: true })
 };

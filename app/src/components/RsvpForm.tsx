@@ -4,7 +4,7 @@ import { FormProvider, useFieldArray, useForm, useFormContext, useWatch } from '
 import { ComboBox } from '@/components/ComboBox.tsx';
 import toast, { Toaster } from 'react-hot-toast';
 
-function useApiData<T>(
+export function useApiData<T>(
   url: string,
   initialData: T | null = null,
 ): {

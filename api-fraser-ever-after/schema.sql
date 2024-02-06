@@ -1,9 +1,9 @@
 DROP TABLE IF EXISTS INVITE_RSVP;
+DROP TABLE IF EXISTS INVITE_ANSWER;
 DROP TABLE IF EXISTS INVITE;
 DROP TABLE IF EXISTS RSVP;
-DROP TABLE IF EXISTS QUESTIONS;
 DROP TABLE IF EXISTS CHOICES;
-DROP TABLE IF EXISTS INVITE_ANSWERS;
+DROP TABLE IF EXISTS QUESTIONS;
 CREATE TABLE IF NOT EXISTS INVITE (
   invite_id TEXT PRIMARY KEY,
   first_name TEXT,
@@ -45,21 +45,23 @@ CREATE TABLE IF NOT EXISTS CHOICES (
   is_answer BOOLEAN,
   trivia_id INTEGER,
   choice TEXT,
-  FOREIGN KEY(trivia_id) REFERENCES trivia(trivia_id)
+  FOREIGN KEY(trivia_id) REFERENCES questions(trivia_id)
   );
 
-CREATE TABLE IF NOT EXISTS INVITE_ANSWERS (
+CREATE TABLE IF NOT EXISTS INVITE_ANSWER (
   invite_answer_id INTEGER PRIMARY KEY AUTOINCREMENT,
   trivia_id INTEGER,
   invite_id TEXT,
-  FOREIGN KEY(trivia_id) REFERENCES trivia(trivia_id),
+  choice_id INTEGER,
+  FOREIGN KEY(choice_id) REFERENCES choices(choice_id)
+  FOREIGN KEY(trivia_id) REFERENCES questions(trivia_id),
   FOREIGN KEY(invite_id) REFERENCES invite(invite_id)
   );
 
 INSERT INTO QUESTIONS ( question ) VALUES 
 ( 'Who is better at Wordle' ),
-( 'What is the capital of Canada?' );
+( 'Who is taller' );
 
 INSERT INTO CHOICES ( trivia_id, choice, is_answer ) VALUES 
-(1, 'Coulton', 0), (1, 'Stephanie', 1), 
-(2, 'Ottowa', 1), (2, 'Calgary', 0) ;
+(1, 'Bride', 1), (1, 'Groom', 0), 
+(2, 'Bride', 0), (2, 'Groom', 1) ;
