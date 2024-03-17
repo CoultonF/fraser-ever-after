@@ -33,6 +33,7 @@ if (Astro.request.method === 'POST') {
     <CommonHead />
     <script>
       // Find all buttons with the `alert` class on the page.
+      import { inviteAtom } from '@/components/inviteStore.ts';
       const buttonSubmit = document.getElementById('invite-button');
       // Handle clicks on each button.
       if (buttonSubmit !== null) {
@@ -53,8 +54,11 @@ if (Astro.request.method === 'POST') {
           }
         });
       }
-      const storedValue = localStorage.getItem('inviteId');
-      document.getElementById('invite-id').value = storedValue;
+      const storedValue = inviteAtom.get();
+      const element = document.getElementById('invite-id');
+      if (element !== undefined) {
+        element.value = storedValue;
+      }
     </script>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

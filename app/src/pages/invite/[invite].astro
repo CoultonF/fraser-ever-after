@@ -6,6 +6,7 @@ import CommonBody from '@/components/CommonBody.astro';
 import Header from '@/components/Header.astro';
 import Menu from '@/components/Menu.astro';
 import { RsvpForm } from '@/components/RsvpForm.tsx';
+import { InviteState } from '@/components/InviteState.tsx';
 const getInvite = async () => {
   const res = await fetch(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/invite/${invite}`, {
     method: 'GET',
@@ -44,12 +45,10 @@ if (inviteData.length === 0) {
   <head>
     <meta charset="utf-8" />
     <CommonHead />
-    <script>
-      const storedValue = localStorage.getItem('inviteId');
-      console.log({ storedValue });
-      const invEl = document.getElementById('invite-menu-href') as HTMLAnchorElement;
+    <script define:vars={{ invite }}>
+      const invEl = document.getElementById('invite-menu-href');
       if (invEl) {
-        invEl.href = `/invite${typeof storedValue === 'string' ? '/' + storedValue : ''}`;
+        invEl.href = `/invite${typeof invite === 'string' ? '/' + invite : ''}`;
       }
     </script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -58,6 +57,7 @@ if (inviteData.length === 0) {
     <Header />
     <Menu />
     <main class="flex mt-10 flex-col items-center w-full h-auto my-0">
+      <InviteState client:only invite={invite} />
       <RsvpForm inviteData={inviteData.at(0)} guestData={rsvpData} client:only transition:persist />
       <span class="hidden" id="inviteId">{invite}</span>
     </main>

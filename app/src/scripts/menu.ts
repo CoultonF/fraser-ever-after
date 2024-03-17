@@ -1,6 +1,6 @@
+import { inviteAtom } from "@/components/inviteStore.ts";
 document.addEventListener('astro:page-load', () => {
-  if (typeof localStorage !== 'undefined') {
-    const storedValue = localStorage.getItem('inviteId');
+  const storedValue = inviteAtom.get()
     const invEl = document.getElementById('invite-menu-href') as HTMLAnchorElement;
     if (invEl) {
       invEl.href = `/invite${typeof storedValue === 'string' ? '/' + storedValue : ''}`;
@@ -13,5 +13,4 @@ document.addEventListener('astro:page-load', () => {
     if (triviaEl) {
       triviaEl.href = `/trivia${typeof storedValue === 'string' ? '/' + storedValue : ''}`;
     }
-  }
 });

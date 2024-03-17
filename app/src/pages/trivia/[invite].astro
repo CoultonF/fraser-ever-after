@@ -3,10 +3,9 @@ import CommonHead from '@/components/CommonHead.astro';
 import CommonBody from '@/components/CommonBody.astro';
 import Menu from '@/components/Menu.astro';
 import Header from '@/components/Header.astro';
-import GroomIcon from '@/components/GroomIcon.astro';
-import BrideIcon from '@/components/BrideIcon.astro';
 import { Choice } from '@/components/Choice.tsx';
 import '../../styles/base.css';
+import { InviteState } from '@/components/InviteState.tsx';
 
 const { invite } = Astro.params;
 
@@ -41,6 +40,7 @@ const answers = await getAnswers();
   <CommonBody>
     <Header />
     <Menu />
+    <InviteState client:only invite={`${invite}`}/>
     <div class="mb-24 flex flex-col mt-10 gap-5">
       <h1 class="text-7xl font-bold text-center tracking-wide p-5 font-serif">Bride or Groom?</h1>
       <div class="flex justify-center">
@@ -94,7 +94,7 @@ const answers = await getAnswers();
                     </h3>
                     <div class="mt-2 w-full justify-around text-sm flex flex-row text-gray-500">
                       <div class="mt-2 w-full justify-between text-sm flex flex-row text-gray-500">
-                        <span>You {answer.is_answer ? 'correctly' : 'incorrectly'} answered: {answer.choice}</span>
+                        <span>You {answer.is_answer ? 'correctly' : 'incorrectly'} answered: {answer?.choice}</span>
                       </div>
                     </div>
                   </div>

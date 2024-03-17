@@ -1,0 +1,27 @@
+---
+import CommonHead from '@/components/CommonHead.astro';
+import CommonBody from '@/components/CommonBody.astro';
+import Menu from '@/components/Menu.astro';
+import Header from '@/components/Header.astro';
+import Schedule from '@/components/Schedule.astro';
+import CommonCard from '@/components/CommonCard.astro';
+import '@/styles/base.css';
+---
+
+<html lang="en" class="bg-paper">
+  <head>
+    <meta charset="utf-8" />
+    <CommonHead />
+  </head>
+  <CommonBody>
+    <Header />
+    <Menu />
+    <div class="flex min-w-0 mx-auto">
+      <CommonCard>
+        <div class="w-auto flex flex-col mx-auto">
+          <Schedule />
+        </div>
+      </CommonCard>
+    </div>
+  </CommonBody>
+</html>
