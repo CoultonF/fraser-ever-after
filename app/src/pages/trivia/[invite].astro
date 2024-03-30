@@ -10,22 +10,30 @@ import { InviteState } from '@/components/InviteState.tsx';
 const { invite } = Astro.params;
 
 const getQuestion = async () => {
-  const res = await fetch(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/trivia/${invite}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  return await res.json();
+  try {
+    const res = await fetch(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/trivia/${invite}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return await res.json();
+  } catch (e) {
+    return [];
+  }
 };
 const getAnswers = async () => {
-  const res = await fetch(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/trivia/${invite}/history`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  return await res.json();
+  try {
+    const res = await fetch(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/trivia/${invite}/history`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return await res.json();
+  } catch (e) {
+    return [];
+  }
 };
 const question = await getQuestion();
 const answers = await getAnswers();
@@ -40,15 +48,18 @@ const answers = await getAnswers();
   <CommonBody>
     <Header />
     <Menu />
-    <InviteState client:only invite={`${invite}`}/>
+    <InviteState client:only invite={`${invite}`} />
     <div class="mb-24 flex flex-col mt-10 gap-5">
       <h1 class="text-7xl font-bold text-center tracking-wide p-5 font-serif">Bride or Groom?</h1>
       <div class="flex justify-center">
-        {question.length === 0 && (
-        <div>
-<h1 class="text-xl tracking-wider font-bold text-center uppercase">Nice job!</h1>
-<h1 class="text-base text-center">You have answered all the questions.</h1>
-        </div>)}
+        {
+          question.length === 0 && (
+            <div>
+              <h1 class="text-xl tracking-wider font-bold text-center uppercase">Nice job!</h1>
+              <h1 class="text-base text-center">You have answered all the questions.</h1>
+            </div>
+          )
+        }
         {
           question.map(q => {
             return (
@@ -58,24 +69,25 @@ const answers = await getAnswers();
                     <h3 class="basis-1/4 text-base text-start font-semibold leading-6 text-gray-900">
                       Q{q.trivia_id}:
                     </h3>
-                    <h3 class="basis-1/2 text-center text-2xl uppercase tracking-widest font-semibold leading-6 text-gray-900">{q.question}?</h3>
+                    <h3 class="basis-1/2 text-center text-2xl uppercase tracking-widest font-semibold leading-6 text-gray-900">
+                      {q.question}?
+                    </h3>
                   </div>
                   <div class="mt-2 w-full justify-around text-sm flex flex-row text-gray-500">
                     <div class="mt-2 w-full justify-around text-sm flex flex-row text-gray-500">
                       <div class=" flex w-full flex-row justify-center gap-10 -bottom-7 h-14 items-center ">
                         {Array.isArray(q?.choices) && q.choices.length > 0 && (
-                        <Choice
-                          triviaId={q.trivia_id}
-                          inviteId={invite}
-                          client:load
-                          transition:persist
-                          choices={q.choices}/>
-                          )
-                        }
+                          <Choice
+                            triviaId={q.trivia_id}
+                            inviteId={invite ?? ''}
+                            client:load
+                            transition:persist
+                            choices={q.choices}
+                          />
+                        )}
                       </div>
                     </div>
                   </div>
-                </div>
                 </div>
               </div>
             );
@@ -94,7 +106,9 @@ const answers = await getAnswers();
                     </h3>
                     <div class="mt-2 w-full justify-around text-sm flex flex-row text-gray-500">
                       <div class="mt-2 w-full justify-between text-sm flex flex-row text-gray-500">
-                        <span>You {answer.is_answer ? 'correctly' : 'incorrectly'} answered: {answer?.choice}</span>
+                        <span>
+                          You {answer.is_answer ? 'correctly' : 'incorrectly'} answered: {answer?.choice}
+                        </span>
                       </div>
                     </div>
                   </div>

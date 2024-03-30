@@ -20,7 +20,7 @@ html {
 }
 
 html * {
-  @apply min-w-0;
+  @apply min-w-0 focus:outline-none;
 }
 
 body {

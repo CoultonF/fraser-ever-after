@@ -64,9 +64,10 @@ export class InviteUpdate extends OpenAPIRoute {
         ),
       );
     });
-    await env.DB.prepare("update invite set attending = ? where invite_id = ?")
-      .bind(rsvpToUpdate.attending, rsvpToUpdate.invite_id)
-      .run();
+    const songRequest = String(rsvpToUpdate.song_request) !== '' ? rsvpToUpdate.song_request : null;
+    const {success } = await env.DB.prepare("update invite set attending = ?, song_request = ? where invite_id = ?")
+      .bind(rsvpToUpdate.attending, songRequest, rsvpToUpdate.invite_id)
+      .run()
     if (rsvpBatches.length > 0) await env.DB.batch(rsvpBatches);
     return new Response(null, { status: 200, headers: headers });
   }

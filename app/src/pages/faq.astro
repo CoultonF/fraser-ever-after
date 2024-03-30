@@ -16,6 +16,8 @@ import CommonBody from '@/components/CommonBody.astro';
   <CommonBody>
     <Header />
     <Menu />
-    <Faq client:load />
+    <div class="w-full max-w-prose mx-auto flex items-center justify-center">
+      <Faq client:load />
+    </div>
   </CommonBody>
 </html>

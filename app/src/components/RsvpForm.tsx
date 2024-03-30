@@ -1,7 +1,7 @@
 import { classNames } from '@/functions/classNames.ts';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormProvider, useFieldArray, useForm, useFormContext, useWatch } from 'react-hook-form';
-import { ComboBox } from '@/components/ComboBox.tsx';
+import { ComboBox2 } from '@/components/ComboBox.tsx';
 import toast, { Toaster } from 'react-hot-toast';
 export function useApiData<T>(
   url: string,
@@ -78,47 +78,55 @@ function formatPhoneNumber(phoneNumber: string) {
   }
 }
 const InviteDetails = ({ inviteData }: any) => {
-  const { control, register } = useFormContext();
+  const { control, register, setValue } = useFormContext();
   const invites = useWatch({ control, name: 'rsvps' });
   const remainingInvites = inviteData?.guest_count - invites.length + 1;
+  React.useEffect(() => {
+    if(inviteData?.attending === undefined) {
+      setValue('invite.attending', 'Yes', { shouldDirty: true });
+    }
+  }, []);
   return (
     <div className="lg:col-start-3 lg:row-end-1">
-      <div className="rounded-lg pb-4 bg-white ring-1 lg:ml-5 ring-gray-900/5">
-        <dl className="flex flex-wrap">
-          <div className="flex-auto pl-6 pt-6">
-            <dt className="text-sm font-semibold leading-6 text-gray-900">Invite Details</dt>
-            <dd className="mt-1 text-base font-semibold pr-1 leading-6 text-gray-900 whitespace-pre-line">
+      <div className="rounded-lg py-3 bg-white  ring-1 ring-gray-900/5">
+        <dl className="flex flex-col gap-2">
+          <div className="flex px-6 py-2 h-full">
+            <dd className="h-full align-middle text-lg font-semibold pr-1 leading-6 text-gray-900 whitespace-pre-line">
               {(invites ?? [])
                 .map((v, index) => {
                   if (index === invites.length - 1) {
                     return v?.first_name;
                   } else if (index === invites.length - 2) {
-                    return v?.first_name + ' &\n';
+                    return v?.first_name + ' & ';
                   } else {
-                    return v?.first_name + ',\n';
+                    return v?.first_name + ', ';
                   }
                 })
                 .join('')}
-            </dd>
-            {remainingInvites > 0 && (
-              <dd className="mt-1 text-base font-semibold leading-6 text-gray-900">+ {remainingInvites} more</dd>
-            )}
+                {remainingInvites > 0 && (` and ${remainingInvites} additional guest`)}
+                {remainingInvites > 1 && ('s')}.
+                </dd>
           </div>
-          <div className="flex w-auto mx-0 gap-x-2 items-center px-6 pt-4">
+          <div className="flex flex-col w-full max-w-sm gap-1 px-6">
             <label htmlFor="attending">Attending:</label>
             <select
-              className="block w-32 rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              defaultValue={undefined}
+              className="block flex-grow rounded-md border-0 pb-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-rosette-300 sm:text-sm sm:leading-6"
+              defaultValue={'Yes'}
               {...register('invite.attending', { required: true })}
             >
               <option value="Yes">Yes</option>
               <option value="No">No</option>
             </select>
             {/* {inviteData?.attending !== undefined && inviteData?.attending !== null && ( */}
-            {/* <dd className="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">
+            {/* <dd className="inline-flex items-center rounded-md bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
               Attending
             </dd> */}
             {/* )} */}
+          </div>
+          <div className='flex flex-col w-full max-w-prose gap-2 px-6 '>
+            <label htmlFor="song request" className='w-36'>Song Request:</label>
+            <input placeholder='Optional' {...register('invite.song_request')} className='block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rosette-300 sm:text-sm sm:leading-6'
+            />
           </div>
         </dl>
       </div>
@@ -126,6 +134,7 @@ const InviteDetails = ({ inviteData }: any) => {
   );
 };
 export const RsvpForm = ({ inviteData, guestData }: any) => {
+  console.log({inviteData})
   const {
     data: rsvpApiData,
     isSuccess: rsvpSuccess,
@@ -138,10 +147,10 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
   } = useApiData(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/invite/${inviteData.invite_id}`, inviteData);
   const notify = () =>
     toast.custom(t => (
-      <div className="rounded-md bg-green-50 p-4 absolute">
-        <div className="flex">
+      <div className={`rounded-md bg-emerald-50 p-5 absolute animate-fade-in ${t.visible ? 'animate-enter' : 'animate-leave'}`}>
+        <div className="flex justify-center items-center">
           <div className="flex-shrink-0">
-            <svg className="h-5 w-5 text-green-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <svg className="h-7 w-7 text-emerald-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
               <path
                 fillRule="evenodd"
                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
@@ -150,14 +159,14 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
             </svg>
           </div>
           <div className="ml-3">
-            <p className="text-sm font-medium text-green-800">Successfully saved</p>
+            <p className="text-lg font-bold text-center text-emerald-800">Successfully saved your RSVP!</p>
           </div>
           <div className="ml-auto pl-3">
             <div className="-mx-1.5 -my-1.5">
               <button
                 onClick={() => toast.remove(t.id)}
                 type="button"
-                className="inline-flex rounded-md bg-green-50 p-1.5 text-green-500 hover:bg-green-100 focus:outline-none focus:ring-2 focus:ring-green-600 focus:ring-offset-2 focus:ring-offset-green-50"
+                className="inline-flex rounded-md bg-emerald-50 p-1.5 text-emerald-500 hover:bg-emerald-100 focus:outline-none focus:ring-2 focus:ring-emerald-600 focus:ring-offset-2 focus:ring-offset-emerald-50"
               >
                 <span className="sr-only">Dismiss</span>
                 <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -168,7 +177,7 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
           </div>
         </div>
       </div>
-    ));
+    ), {id:'saved', duration: 5000});
   const createRsvp = async (createData: any) => {
     try {
       await fetch(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/rsvp/create`, {
@@ -225,12 +234,14 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
       .map(v => ({ ...v, main_dish: v?.main_dish ?? '' }));
     const createData = {
       invite_id: inviteData.invite_id,
-      attending: 'Yes',
+      attending: data.invite.attending,
+      song_request: data.invite.song_request ?? '',
       rsvps: createRsvps,
     };
     const updateData = {
       invite_id: inviteData.invite_id,
       attending: data.invite.attending,
+      song_request: data.invite.song_request ?? '',
       rsvps: updateRsvps,
     };
     const deleteData = deleteRsvps.map(v => v?.rsvp_id);
@@ -280,10 +291,19 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
         <div className="space-y-12 w-full">
           <div className="flex flex-col sm:flex-row gap-x-10 gap-y-4 max-w-[1500px] mx-auto">
             <div className="flex flex-col flex-1 gap-4 min-w-min">
-              <InviteDetails inviteData={inviteData} />
             </div>
             <div className="flex flex-col flex-grow gap-x-6 gap-y-2 h-fit w-full md:max-w-xl xl:max-w-3xl sm:grid-cols-1 md:col-span-2">
-              <h3 className="col-span-full h-fit text-xl mx-auto sm:ml-5">Your Guest List</h3>
+              <h3 className="col-span-full h-auto text-5xl w-full text-center align-top font-serif mx-auto p-3">R.S.V.P.</h3>
+                {submitCount > 0 && !isSubmitSuccessful && (
+                  <span
+                    className="rounded bg-rosette-300 px-5 py-3 text-md flex items-center gap-4 font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 text-center"
+                  >
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className='h-5 w-5 fill-rosette-700'><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg>
+                    Please fill out the missing fields that are required.</span>
+                )}
+              <h3 className="col-span-full h-fit text-xl ml-3 sm:ml-5">Invite Details</h3>
+              <InviteDetails inviteData={inviteData} />
+              <h3 className="col-span-full h-fit text-xl ml-3 sm:ml-5">Guest List</h3>
               <div className="col-span-full flex flex-col gap-4 w-min-fit">
                 {fields.map((field, index) => {
                   return (
@@ -294,7 +314,7 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
                           <input
                             disabled={index === 0}
                             className={classNames(
-                              'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6',
+                              'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rosette-300 sm:text-sm sm:leading-6',
                               index === 0 && 'bg-gray-50 text-slate-700 border-gray-400',
                             )}
                             {...register(`rsvps.${index}.first_name`, { required: true, minLength: 1 })}
@@ -305,7 +325,7 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
                           <input
                             disabled={index === 0}
                             className={classNames(
-                              'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6',
+                              'block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-rosette-300 sm:text-sm sm:leading-6',
                               index === 0 && 'bg-gray-50 text-slate-700 border-gray-400',
                             )}
                             {...register(`rsvps.${index}.last_name`, { required: true, minLength: 1 })}
@@ -316,17 +336,16 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
                             Main Dish
                           </label>
                           <select
-                            className="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            className="block w-full rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-rosette-300 sm:text-sm sm:leading-6"
                             {...register(`rsvps.${index}.main_dish`, { required: true })}
                           >
-                            <option>Chicken Fingers</option>
-                            <option>Wagyu Beef</option>
-                            <option>Cabbage Rolls</option>
+                            <option>Maple Salmon Filet</option>
+                            <option>AAA Grade Beef Striploin</option>
                           </select>
                         </div>
                         <div className="flex flex-col gap-1 w-64">
                           <label htmlFor="Dietary Restrictions">Dietary Restrictions</label>
-                          <ComboBox name={`rsvps.${index}.dietary_restrictions`} />
+                          <ComboBox2 name={`rsvps.${index}.dietary_restrictions`} />
                         </div>
                       </div>
                       {index !== 0 && (
@@ -363,23 +382,13 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
                       }
                     }}
                     type="button"
-                    className="w-32 inline-flex disabled:bg-gray-400 items-center gap-x-2 rounded-md active:bg-green-700 bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+                    className="w-32 inline-flex disabled:bg-gray-400 items-center gap-x-2 rounded-md active:bg-emerald-700 bg-emerald-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
                   >
-                    <svg className="-ml-0.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                        clipRule="evenodd"
-                      />
+                    <svg className="-ml-0.5 h-5 w-5" viewBox="0 0 640 512" fill="currentColor" aria-hidden="true">
+  <path d="M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM504 312V248H440c-13.3 0-24-10.7-24-24s10.7-24 24-24h64V136c0-13.3 10.7-24 24-24s24 10.7 24 24v64h64c13.3 0 24 10.7 24 24s-10.7 24-24 24H552v64c0 13.3-10.7 24-24 24s-24-10.7-24-24z"/>
                     </svg>
                     Add Guest
                   </button>
-                )}
-                {submitCount > 0 && (
-                  <button
-                    type="button"
-                    className="rounded bg-indigo-600 px-2 py-1 text-xs font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  ></button>
                 )}
               </div>
             </div>
@@ -393,7 +402,7 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
               type="button"
               onClick={handleSubmit(onSubmit)}
               disabled={!isDirty}
-              className="w-32 flex justify-center disabled:bg-gray-400 items-center gap-x-2 rounded-md active:bg-green-700 bg-green-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600"
+              className="w-32 flex justify-center disabled:bg-gray-400 items-center gap-x-2 rounded-md active:bg-emerald-700 bg-emerald-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
             >
               {/* <svg
                 className="-ml-0.5 h-5 w-5"

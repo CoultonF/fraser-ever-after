@@ -9,13 +9,14 @@ const active = (url: string) => {
 ---
 
 <div
-  class="flex flex-row md:gap-10 gap-3 sm:text-base text-sm border-b border-black pb-5 w-full items-center justify-center"
+  class="flex flex-row md:gap-10 gap-3 sm:text-base text-sm border-b border-black pb-4 md:pb-10 w-full items-center justify-center"
 >
-  <a class={active('/')} href="/">Save The Date</a>
-  <a class={active('/trivia')} id="trivia-menu-href" href="/trivia">Trivia</a>
+  <a class={active('/')} href="/">Gallery</a>
   <a class={active('/invite')} id="invite-menu-href">RSVP</a>
   <a class={active('/schedule')} href="/schedule">Schedule</a>
+  <a class={active('/trivia')} id="trivia-menu-href" href="/trivia">Trivia</a>
   <a class={active('/faq')} href="/faq">FAQ</a>
+  <a class={active('/save-the-date')} href="/save-the-date">Save The Date</a>
 </div>
 <script>
   import '../scripts/menu.ts';

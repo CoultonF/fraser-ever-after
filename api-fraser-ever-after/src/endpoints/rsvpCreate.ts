@@ -77,8 +77,9 @@ export class RsvpCreate extends OpenAPIRoute {
       );
     });
     if (inviteRsvp.length > 0) await env.DB.batch(inviteRsvp);
-    await env.DB.prepare("update invite set attending = ? where invite_id = ?")
-      .bind(rsvpToCreate.attending, rsvpToCreate.invite_id)
+    const songRequest = String(rsvpToCreate.song_request) !== '' ? rsvpToCreate.song_request : null;
+    await env.DB.prepare("update invite set attending = ?, song_request = ? where invite_id = ?")
+      .bind(rsvpToCreate.attending, songRequest, rsvpToCreate.invite_id)
       .run();
     if (remainingInvites >= rsvpToCreate.rsvps.length) {
       return new Response(null, { status: 200, headers: headers });
