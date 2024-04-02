@@ -41,10 +41,11 @@ export const ComboBox2 = ({
     .reduce((acc:string[], curr:string) => (!acc.includes(curr) ? [...acc, curr] : acc), []);
 
   return (
-    <Listbox multiple as="div" value={selectedPerson} onChange={setSelectedPerson} disabled={disabled}>
+    <Listbox multiple value={selectedPerson} onChange={setSelectedPerson} disabled={disabled}>
       <div className="relative focus:outline-none">
         <Listbox.Button
         ref={refs.setReference}
+        tabIndex={0}
           className="text-ellipsis focus:outline-none overflow-hidden w-full flex h-8 rounded-md border-0 bg-white py-1.5 pl-3 pr-10 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-rosette-300 sm:text-sm sm:leading-6"
         >
           <span className="block truncate" title={selectedPersonWatch}>

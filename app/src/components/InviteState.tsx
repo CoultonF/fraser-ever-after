@@ -8,4 +8,8 @@ function InviteState ({invite}: {invite:string}){
   return <></>
 }
 
+export const useInviteState = () => {
+  return inviteAtom.get()
+}
+
 export {InviteState}

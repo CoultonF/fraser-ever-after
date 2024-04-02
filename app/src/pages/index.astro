@@ -19,14 +19,8 @@ const images = await Astro.glob('/src/images/engagement-photos/*').then(files =>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <CommonBody>
-    <!-- <Header /> -->
     <div>
       <div class="opacity-80 sticky top-0 bg-white w-full flex flex-col">
-        <div class="flex flex-row h-auto justify-center md:px-40 px-10 gap-10 items-center">
-          <div class="hidden md:flex h-0 border-t border-black flex-1 my-auto bg-black"></div>
-          <h1 class="md:text-5xl text-4xl text-center md:py-10 py-4 font-serif">Stephanie & Coulton</h1>
-          <div class="hidden h-0 border-t border-black md:flex flex-1 my-auto bg-black"></div>
-        </div>
         <Menu />
       </div>
       <Image

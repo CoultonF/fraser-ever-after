@@ -9,6 +9,20 @@ import { InviteState } from '@/components/InviteState.tsx';
 
 const { invite } = Astro.params;
 
+const getStats = async (triviaId: number) => {
+  try {
+    const res = await fetch(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/trivia/${triviaId}/stats`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    return await res.json();
+  } catch (e) {
+    return null;
+  }
+};
+
 const getQuestion = async () => {
   try {
     const res = await fetch(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/trivia/${invite}`, {
@@ -36,7 +50,9 @@ const getAnswers = async () => {
   }
 };
 const question = await getQuestion();
+const stats = await getStats(question.at(0)?.trivia_id ?? 0);
 const answers = await getAnswers();
+const answeredStats = await Promise.all(answers.map((v: any) => getStats(Number(v.trivia_id))));
 ---
 
 <html lang="en" class="bg-paper">
@@ -46,7 +62,6 @@ const answers = await getAnswers();
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <CommonBody>
-    <Header />
     <Menu />
     <InviteState client:only invite={`${invite}`} />
     <div class="mb-24 flex flex-col mt-10 gap-5">
@@ -88,6 +103,10 @@ const answers = await getAnswers();
                       </div>
                     </div>
                   </div>
+                  <div class="w-full py-5 flex justify-center">
+                    <span>{stats?.percentage_correct ?? 0}% of participants answered this one correctly.</span>
+                  </div>
+                  <div />
                 </div>
               </div>
             );
@@ -105,9 +124,13 @@ const answers = await getAnswers();
                       Q{answer.trivia_id}: {answer.question}?
                     </h3>
                     <div class="mt-2 w-full justify-around text-sm flex flex-row text-gray-500">
-                      <div class="mt-2 w-full justify-between text-sm flex flex-row text-gray-500">
+                      <div class="mt-2 w-full justify-between text-sm flex flex-col text-gray-500">
                         <span>
                           You {answer.is_answer ? 'correctly' : 'incorrectly'} answered: {answer?.choice}
+                        </span>
+                        <span>
+                          {answeredStats.find(v => v.trivia_id === answer.trivia_id)?.percentage_correct ?? 0}% of
+                          participants answered this one correctly.
                         </span>
                       </div>
                     </div>

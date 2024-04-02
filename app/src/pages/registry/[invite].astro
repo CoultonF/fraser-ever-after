@@ -1,10 +1,31 @@
 ---
+const { invite } = Astro.params;
+import '../../styles/base.css';
 import CommonHead from '@/components/CommonHead.astro';
 import CommonBody from '@/components/CommonBody.astro';
-import Menu from '@/components/Menu.astro';
 import Header from '@/components/Header.astro';
-import '../../styles/base.css';
+import Menu from '@/components/Menu.astro';
+import { RsvpForm } from '@/components/RsvpForm.tsx';
+import { InviteState } from '@/components/InviteState.tsx';
 import { RegistryText } from '@/components/RegistryText';
+const getInvite = async () => {
+  const res = await fetch(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/invite/${invite}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  return await res.json();
+};
+let inviteData = [];
+try {
+  inviteData = await getInvite();
+  if (inviteData.length === 0) {
+    return Astro.redirect('/registry');
+  }
+} catch (e) {
+  return Astro.redirect('/registry');
+}
 ---
 
 <html lang="en" class="bg-paper">
@@ -16,7 +37,7 @@ import { RegistryText } from '@/components/RegistryText';
   <CommonBody>
     <Menu />
     <div class="flex flex-col w-full justify-center">
-      <RegistryText client:load />
+      <RegistryText client:load invite={inviteData.at(0)} />
       <br />
       <script
         id="script_myregistry_giftlist_iframe"

@@ -1,23 +1,9 @@
 ---
-import { classNames } from '@/functions/classNames.ts';
-const active = (url: string) => {
-  if (url.startsWith('/invite') || url.startsWith('/trivia')) {
-    return classNames(Astro.url.pathname.includes(url) ? 'font-bold' : '');
-  }
-  return classNames(url === Astro.url.pathname ? 'font-bold' : '');
-};
+import Menu from '@/components/Menu.tsx';
+import Header from '@/components/Header.astro';
+
+const pathname = Astro.url.pathname;
 ---
 
-<div
-  class="flex flex-row md:gap-10 gap-3 sm:text-base text-sm border-b border-black pb-4 md:pb-10 w-full items-center justify-center"
->
-  <a class={active('/')} href="/">Gallery</a>
-  <a class={active('/invite')} id="invite-menu-href">RSVP</a>
-  <a class={active('/schedule')} href="/schedule">Schedule</a>
-  <a class={active('/trivia')} id="trivia-menu-href" href="/trivia">Trivia</a>
-  <a class={active('/faq')} href="/faq">FAQ</a>
-  <a class={active('/save-the-date')} href="/save-the-date">Save The Date</a>
-</div>
-<script>
-  import '../scripts/menu.ts';
-</script>
+{pathname !== '/' && pathname !== '/save-the-date' && <Header />}
+<Menu client:load pathname={pathname} />

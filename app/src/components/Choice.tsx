@@ -10,11 +10,18 @@ export const  Choice = ({choices, inviteId, triviaId}: {triviaId:number ,inviteI
         body: JSON.stringify(choiceData),
       });
     } catch (e) {
+      alert(JSON.stringify(e));
       console.error(e)
     }
   };
   const handleClick = async (choiceId: number) => {
-    await submitChoice({choice_id: choiceId, trivia_id: triviaId});
+    try{
+      await submitChoice({choice_id: choiceId, trivia_id: triviaId});
+    }
+    catch (e) {
+      alert(JSON.stringify(e));
+      console.error(e)
+    }
     window.location.reload();
   }
   return (

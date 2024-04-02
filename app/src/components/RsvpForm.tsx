@@ -82,7 +82,7 @@ const InviteDetails = ({ inviteData }: any) => {
   const invites = useWatch({ control, name: 'rsvps' });
   const remainingInvites = inviteData?.guest_count - invites.length + 1;
   React.useEffect(() => {
-    if(inviteData?.attending === undefined) {
+    if(!inviteData?.attending) {
       setValue('invite.attending', 'Yes', { shouldDirty: true });
     }
   }, []);
@@ -104,7 +104,8 @@ const InviteDetails = ({ inviteData }: any) => {
                 })
                 .join('')}
                 {remainingInvites > 0 && (` and ${remainingInvites} additional guest`)}
-                {remainingInvites > 1 && ('s')}.
+                {remainingInvites > 1 && ('s')}
+                {remainingInvites > 0 && ('.')}
                 </dd>
           </div>
           <div className="flex flex-col w-full max-w-sm gap-1 px-6">
@@ -145,6 +146,35 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
     isSuccess: inviteSuccess,
     refetchDataAsync: refetchAsyncInvite,
   } = useApiData(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/invite/${inviteData.invite_id}`, inviteData);
+  const notifyError = () =>
+    toast.custom(t => (
+      <div className={`rounded-md bg-rosette-50 p-5 absolute animate-fade-in ${t.visible ? 'animate-enter' : 'animate-leave'}`}>
+        <div className="flex justify-center items-center">
+          <div className="flex-shrink-0">
+                <svg className="h-7 w-7" viewBox="0 0 512 512" fill="currentColor" aria-hidden="true">
+                  <path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/>
+                </svg>
+          </div>
+          <div className="ml-3">
+            <p className="text-lg font-bold text-center text-rosette-800">Error: Something went wrong.</p>
+          </div>
+          <div className="ml-auto pl-3">
+            <div className="-mx-1.5 -my-1.5">
+              <button
+                onClick={() => toast.remove(t.id)}
+                type="button"
+                className="inline-flex rounded-md bg-rosette-50 p-1.5 text-rosette-500 hover:bg-rosette-100 focus:outline-none focus:ring-2 focus:ring-rosette-600 focus:ring-offset-2 focus:ring-offset-rosette-50"
+              >
+                <span className="sr-only">Dismiss</span>
+                <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    ), {id:'error-saving'});
   const notify = () =>
     toast.custom(t => (
       <div className={`rounded-md bg-emerald-50 p-5 absolute animate-fade-in ${t.visible ? 'animate-enter' : 'animate-leave'}`}>
@@ -253,9 +283,10 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
       setSaving('Saved');
       await refetchAsyncInvite();
       await refetchAsyncRsvp();
-      notify();
+      notify()
     } catch (e) {
-      // toast.error('ERROR: Unable to save.');
+      notifyError();
+      console.error(e)
     }
   };
   useEffect(() => {
@@ -292,8 +323,7 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
           <div className="flex flex-col sm:flex-row gap-x-10 gap-y-4 max-w-[1500px] mx-auto">
             <div className="flex flex-col flex-1 gap-4 min-w-min">
             </div>
-            <div className="flex flex-col flex-grow gap-x-6 gap-y-2 h-fit w-full md:max-w-xl xl:max-w-3xl sm:grid-cols-1 md:col-span-2">
-              <h3 className="col-span-full h-auto text-5xl w-full text-center align-top font-serif mx-auto p-3">R.S.V.P.</h3>
+            <div className="flex flex-col flex-grow gap-x-6 gap-y-2 py-4 h-fit w-full md:max-w-xl xl:max-w-3xl sm:grid-cols-1 md:col-span-2">
                 {submitCount > 0 && !isSubmitSuccessful && (
                   <span
                     className="rounded bg-rosette-300 px-5 py-3 text-md flex items-center gap-4 font-semibold text-white shadow-sm  focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 text-center"
@@ -381,6 +411,7 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
                         append({ first_name: '', last_name: '', dietary_restrictions: '', main_dish: '' });
                       }
                     }}
+                    tabIndex={0}
                     type="button"
                     className="w-32 inline-flex disabled:bg-gray-400 items-center gap-x-2 rounded-md active:bg-emerald-700 bg-emerald-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
                   >
@@ -401,6 +432,7 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
             <button
               type="button"
               onClick={handleSubmit(onSubmit)}
+              tabIndex={0}
               disabled={!isDirty}
               className="w-32 flex justify-center disabled:bg-gray-400 items-center gap-x-2 rounded-md active:bg-emerald-700 bg-emerald-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600"
             >

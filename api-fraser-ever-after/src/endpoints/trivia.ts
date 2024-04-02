@@ -33,14 +33,18 @@ export class TriviaWrite extends OpenAPIRoute {
       }
       const {choice_id, trivia_id} = data.body;
       const {inviteId} = data.params;
-      env.DB.prepare(`
+      const { success } = await env.DB.prepare(`
       update invite_answer
       set choice_id = ?
       where invite_id = ?
       and trivia_id = ?
       and choice_id is null
       `).bind(choice_id, inviteId, trivia_id).run();
-      return new Response(undefined, {status: 200, headers:  headers});
+      if (success) {
+        return new Response(undefined, {status: 200, headers:  headers});
+      } else {
+        return new Response(undefined, {status: 500, headers:  headers});
+      }
   } catch (e) {
     return new Response(undefined, {status: 500, headers:  headers});
   }
@@ -163,4 +167,35 @@ export class TriviaHistoryFetch extends OpenAPIRoute {
     return new Response(JSON.stringify(results), {headers: {...headers, "Content-Type": "application/json"}});
   }
 
+}
+
+export class TriviaStatsFetch extends OpenAPIRoute {
+  static schema: OpenAPIRouteSchema = {
+    tags: ["RSVP"],
+    summary: "Fetch trivia stats",
+    parameters: {
+      triviaId: Path(Number, {
+        description: "Trivia Id",
+      }),
+    },
+  };
+
+  async handle(
+    request: Request,
+    env: Env,
+    context: any,
+    data: Record<string, any>,
+  ) {
+    if (request.method === "OPTIONS") {
+      return new Response(null, { headers: headers });
+    }
+    const {triviaId} = data.params;
+    const results = await env.DB.prepare(
+      `SELECT qa.trivia_id, 
+      SUM(CASE WHEN c.is_answer = 1 THEN 1 ELSE 0 END) * 100.0 / COUNT(*) AS percentage_correct
+      FROM INVITE_ANSWER qa JOIN CHOICES c ON qa.choice_id = c.choice_id WHERE qa.trivia_id = ? GROUP BY qa.trivia_id
+      `
+    ).bind(triviaId).first();
+    return new Response(JSON.stringify(results), {headers: {...headers, "Content-Type": "application/json"}});
+  }
 }

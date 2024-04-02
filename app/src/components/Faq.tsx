@@ -8,15 +8,11 @@ const faqs = [
   },
   {
     question: "Is there a parking lot?",
-    answer: "Yes, there is a parking lot available.",
+    answer: "Yes, there is a parking lot available. You can leave your car there for overnight parking as well if needed.",
   },
   {
     question: "When should I arrive?",
-    answer: "Please aim to arrive to the venue for 2:30pm",
-  },
-  {
-    question: "Can I take pictures or videos?",
-    answer: "Feel free to take videos of the day, but please refrain from taking pictures during the ceremony.",
+    answer: "Please aim to arrive to the venue for 2:45pm",
   },
   {
     question: "When is the last day to RSVP?",
@@ -31,8 +27,7 @@ export const Faq = () => {
   return (
     <CommonCard>
       <div className="w-full flex flex-col  max-w-prose divide-y divide-gray-900/10">
-        <h2 className="w-full text-2xl font-bold leading-10 tracking-tight text-gray-900">Frequently asked questions</h2>
-        <dl className="mt-10 w-full space-y-6 divide-y divide-gray-900/10">
+        <dl className=" w-full space-y-6 divide-y divide-gray-900/10">
           {faqs.map(faq => (
             <Disclosure as="div" key={faq.question} className="pt-6 w-full">
               {({ open }) => (

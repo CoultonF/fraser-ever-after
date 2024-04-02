@@ -5,7 +5,7 @@ import { RsvpFetch } from "./endpoints/rsvpFetch";
 import { InviteFetch } from "./endpoints/inviteFetch";
 import { InviteUpdate } from "./endpoints/inviteUpdate";
 import { RsvpDelete } from "endpoints/inviteDelete";
-import { TriviaFetch, TriviaHistoryFetch, TriviaWrite } from "endpoints/trivia";
+import { TriviaFetch, TriviaHistoryFetch, TriviaWrite, TriviaStatsFetch } from "endpoints/trivia";
 const { preflight, corsify } = createCors({
   origins: ["*"],
   methods: ["GET", "POST", "PATCH", "DELETE"],
@@ -24,6 +24,7 @@ router.post("/api/rsvp/update", preflight, InviteUpdate);
 router.get("/api/invite/:inviteId", preflight, InviteFetch);
 router.get("/api/trivia/:inviteId", preflight, TriviaFetch);
 router.post("/api/trivia/:inviteId", preflight, TriviaWrite);
+router.get("/api/trivia/:triviaId/stats", preflight, TriviaStatsFetch);
 router.get("/api/trivia/:inviteId/history", preflight, TriviaHistoryFetch);
 // router.get("/api/tasks/:taskSlug/", TaskFetch);
 // router.delete("/api/tasks/:taskSlug/", TaskDelete);
