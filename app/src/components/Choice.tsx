@@ -24,18 +24,19 @@ export const  Choice = ({choices, inviteId, triviaId}: {triviaId:number ,inviteI
     }
     window.location.reload();
   }
+  if(choices)
   return (
     <>
-                        {choices.map(choice => {
+                        {choices && choices.map(choice => {
                           if (choice.choice.toLowerCase() === 'bride') {
                             return (
-                              <button type="button" onClick={()=> handleClick(choice.choice_id)} title="Bride" className="cursor-pointer overflow-clip hover:opacity-70 hover:bg-pink-100 hover:border-2 border border-black h-14 w-14 rounded-full drop-shadow-md bg-white">
+                              <button key={choice.choice_id} type="button" onClick={()=> handleClick(choice.choice_id)} title="Bride" className="cursor-pointer overflow-clip hover:opacity-70 hover:bg-pink-100 hover:border-2 border border-black h-14 w-14 rounded-full drop-shadow-md bg-white">
                                 <BrideIcon />
                               </button>
                             );
                           } else {
                             return (
-                              <button type="button" onClick={()=> handleClick(choice.choice_id)} title="Groom" className="cursor-pointer overflow-clip hover:opacity-70 hover:bg-blue-100 hover:border-2 border border-black h-14 w-14 rounded-full drop-shadow-md bg-white">
+                              <button key={choice.choice_id} type="button" onClick={()=> handleClick(choice.choice_id)} title="Groom" className="cursor-pointer overflow-clip hover:opacity-70 hover:bg-blue-100 hover:border-2 border border-black h-14 w-14 rounded-full drop-shadow-md bg-white">
                                 <GroomIcon />
                               </button>
                             );

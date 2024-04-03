@@ -6,7 +6,8 @@
     "deploy": "wrangler deploy",
     "dev": "wrangler dev",
     "start": "wrangler dev",
-    "data": "wrangler d1 execute FRASER_EVER_AFTER --local --file schema.sql"
+    "data": "wrangler d1 execute FRASER_EVER_AFTER --local --file schema.sql",
+    "data-prod": "wrangler d1 execute FRASER_EVER_AFTER --file schema.sql"
   },
   "dependencies": {
     "@cloudflare/itty-router-openapi": "^1.0.1",

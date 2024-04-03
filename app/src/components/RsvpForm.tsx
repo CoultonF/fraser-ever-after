@@ -135,7 +135,6 @@ const InviteDetails = ({ inviteData }: any) => {
   );
 };
 export const RsvpForm = ({ inviteData, guestData }: any) => {
-  console.log({inviteData})
   const {
     data: rsvpApiData,
     isSuccess: rsvpSuccess,
@@ -276,7 +275,6 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
     };
     const deleteData = deleteRsvps.map(v => v?.rsvp_id);
     try {
-      console.log({ createData, updateData, deleteData });
       await deleteRsvp(deleteData);
       await updateRsvp(updateData);
       await createRsvp(createData);

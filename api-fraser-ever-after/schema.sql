@@ -69,8 +69,26 @@ CREATE TABLE IF NOT EXISTS INVITE_ANSWER (
 
 INSERT INTO QUESTIONS ( question ) VALUES 
 ( 'Who is better at Wordle' ),
-( 'Who is taller' );
+( 'Who said I love you first' ),
+( "Who's car is the cleanest" ),
+( "Who is the smarter one" ),
+( "Who has more shoes" ),
+( 'Who wakes up the ealiest' ),
+( 'Who made the first move' ),
+( 'Who will cry on the big day' ),
+( 'Who would survive longer on a deserted island' ),
+( 'Who is the bigger party animal' ),
+( 'Who has more tattoos' );
 
 INSERT INTO CHOICES ( trivia_id, choice, is_answer ) VALUES 
 (1, 'Bride', 1), (1, 'Groom', 0), 
-(2, 'Bride', 0), (2, 'Groom', 1) ;
+(2, 'Bride', 0), (2, 'Groom', 1) ,
+(3, 'Bride', 0), (3, 'Groom', 1) ,
+(4, 'Bride', 1), (4, 'Groom', 0) ,
+(5, 'Bride', 1), (5, 'Groom', 0) ,
+(6, 'Bride', 1), (6, 'Groom', 0) ,
+(7, 'Bride', 1), (7, 'Groom', 0) ,
+(8, 'Bride', 0), (8, 'Groom', 1) ,
+(9, 'Bride', 1), (9, 'Groom', 0) ,
+(10, 'Bride', 0), (10, 'Groom', 1) ,
+(11, 'Bride', 0), (11, 'Groom', 1) ;

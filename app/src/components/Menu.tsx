@@ -4,7 +4,7 @@ import { inviteAtom } from "@/components/inviteStore.ts";
 import { classNames } from '@/functions/classNames.ts';
 
 
-export default function Menu({pathname}: {pathname:string}) {
+export default function Menu({pathname, menuImage}: {pathname:string, menuImage: any}) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(true)
   const inviteId = inviteAtom.get()
   const [navigation] = React.useState([
@@ -31,8 +31,8 @@ export default function Menu({pathname}: {pathname:string}) {
             className="absolute top-0 left-0 h-full text-gray-700"
             onClick={() => setMobileMenuOpen(true)}
           >
-            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+            <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
             </svg>
           </button>
           <h1 className='w-full font-serif text-3xl tracking-wider text-center'>
@@ -48,7 +48,7 @@ export default function Menu({pathname}: {pathname:string}) {
         </div>
       </nav>
       <Dialog as="div" className="md:hidden" open={mobileMenuOpen} onClose={setMobileMenuOpen}>
-        <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 md:max-w-sm md:ring-1 md:ring-gray-900/10">
+        <Dialog.Panel className="flex flex-col overflow-none fixed inset-y-0 right-0 z-50 w-full  h-full bg-white px-6 py-6 md:max-w-sm md:ring-1 md:ring-gray-900/10">
           <div className="flex items-center justify-between">
             <button
               type="button"
@@ -56,31 +56,36 @@ export default function Menu({pathname}: {pathname:string}) {
               onClick={() => setMobileMenuOpen(false)}
             >
               <span className="sr-only">Close menu</span>
-        <svg
-          className="h-7 w-7"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke-width="1.5"
-          stroke="currentColor"
-          aria-hidden="true"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
-        </svg>
+              <svg
+                className="h-7 w-7"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+              </svg>
             </button>
           </div>
-          <div className="mt-6 flow-root">
-            <div className="-my-6 divide-y divide-gray-500/10">
-              <div className="space-y-2 py-6">
+          <div className="h-full mt-6 flow-root">
+            <div className="h-full -my-6 divide-y divide-gray-500/10">
+              <div className="flex h-full flex-col space-y-2 pt-6">
                 {navigation.map((item) => (
                   <a
                     key={item.name}
                     id={`${item.id}-mobile`}
                     href={item.href}
-                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                    className={classNames("-mx-3 block rounded-lg px-3 py-2 text-base leading-7 text-gray-900 hover:bg-rosette-100",
+                      pathname === item.href && ' underline font-bold')}
                   >
                     {item.name}
                   </a>
                 ))}
+
+                <div className="flex-grow overflow-hidden">
+                  <img title='bouquet of flowers' src={menuImage} className='object-contain'/>
+                  </div>
               </div>
             </div>
           </div>

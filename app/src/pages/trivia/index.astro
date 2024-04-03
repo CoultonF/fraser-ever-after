@@ -16,7 +16,6 @@ if (Astro.request.method === 'POST') {
       errors.inviteId += 'Invalid invite code.';
     }
     const hasErrors = Object.values(errors).some(msg => msg);
-    console.log(hasErrors);
     if (!hasErrors) {
       return Astro.redirect('/');
     }

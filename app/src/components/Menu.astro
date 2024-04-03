@@ -1,9 +1,10 @@
 ---
 import Menu from '@/components/Menu.tsx';
 import Header from '@/components/Header.astro';
+import floral from '../images/flower-menu.png';
 
 const pathname = Astro.url.pathname;
 ---
 
 {pathname !== '/' && pathname !== '/save-the-date' && <Header />}
-<Menu client:load pathname={pathname} />
+<Menu client:only pathname={pathname} menuImage={floral.src} />

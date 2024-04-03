@@ -49,10 +49,18 @@ const getAnswers = async () => {
     return [];
   }
 };
-const question = await getQuestion();
-const stats = await getStats(question.at(0)?.trivia_id ?? 0);
-const answers = await getAnswers();
-const answeredStats = await Promise.all(answers.map((v: any) => getStats(Number(v.trivia_id))));
+let question: any[] = [];
+let stats: any[] = [];
+let answers: any[] = [];
+let answeredStats: any[] = [];
+try {
+  question = await getQuestion();
+  stats = await getStats(question.at(0)?.trivia_id ?? 1);
+  answers = await getAnswers();
+  answeredStats = await Promise.all(answers.map((v: any) => getStats(Number(v.trivia_id))));
+} catch (e) {
+  console.error(e);
+}
 ---
 
 <html lang="en" class="bg-paper">
@@ -95,9 +103,8 @@ const answeredStats = await Promise.all(answers.map((v: any) => getStats(Number(
                           <Choice
                             triviaId={q.trivia_id}
                             inviteId={invite ?? ''}
-                            client:load
-                            transition:persist
-                            choices={q.choices}
+                            choices={q?.choices ?? []}
+                            client:only
                           />
                         )}
                       </div>
