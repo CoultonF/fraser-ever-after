@@ -2,12 +2,29 @@
 import CommonHead from '@/components/CommonHead.astro';
 import CommonBody from '@/components/CommonBody.astro';
 import Menu from '@/components/Menu.astro';
-import Header from '@/components/Header.astro';
 import { Choice } from '@/components/Choice.tsx';
 import '../../styles/base.css';
 import { InviteState } from '@/components/InviteState.tsx';
 
 const { invite } = Astro.params;
+const getInvite = async () => {
+  const res = await fetch(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/invite/${invite}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  return await res.json();
+};
+let inviteData = [];
+try {
+  inviteData = await getInvite();
+  if (inviteData.length === 0) {
+    return Astro.redirect('/trivia');
+  }
+} catch (e) {
+  return Astro.redirect('/trivia');
+}
 
 const getStats = async (triviaId: number) => {
   try {

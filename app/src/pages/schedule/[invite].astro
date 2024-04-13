@@ -1,0 +1,47 @@
+---
+import CommonHead from '@/components/CommonHead.astro';
+import CommonBody from '@/components/CommonBody.astro';
+import Menu from '@/components/Menu.astro';
+import Schedule from '@/components/Schedule.astro';
+import CommonCard from '@/components/CommonCard.astro';
+import '@/styles/base.css';
+import { InviteState } from '@/components/InviteState.tsx';
+
+const { invite } = Astro.params;
+const getInvite = async () => {
+  const res = await fetch(`${import.meta.env.PUBLIC_API_ENDPOINT}/api/invite/${invite}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+  return await res.json();
+};
+let inviteData = [];
+try {
+  inviteData = await getInvite();
+  if (inviteData.length === 0) {
+    return Astro.redirect('/scehdule');
+  }
+} catch (e) {
+  return Astro.redirect('/schedule');
+}
+---
+
+<html lang="en" class="bg-paper">
+  <head>
+    <meta charset="utf-8" />
+    <CommonHead />
+  </head>
+  <CommonBody>
+    <Menu />
+    <InviteState client:only invite={`${invite}`} />
+    <div class="flex min-w-0 mx-auto">
+      <CommonCard>
+        <div class="w-auto flex flex-col mx-auto">
+          <Schedule />
+        </div>
+      </CommonCard>
+    </div>
+  </CommonBody>
+</html>
