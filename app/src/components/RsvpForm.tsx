@@ -371,8 +371,8 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
                             <option>AAA Grade Beef Striploin</option>
                             { !!inviteData?.kids && (
                                 <>
-                                <option>[ KIDS ] Pasta</option>
-                                <option>[ KIDS ] Pizza</option>
+                                <option>[ KIDS ] Cheese Pizza</option>
+                                <option>[ KIDS ] Pasta with Tomato Sauce</option>
                                 </>
                               )
                             }

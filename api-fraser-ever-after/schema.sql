@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS MAIN_DISH (
   main_dish TEXT PRIMARY KEY
   );
 
-INSERT INTO MAIN_DISH ( main_dish ) VALUES ('Maple Salmon Filet'), ('AAA Grade Beef Striploin');
+INSERT INTO MAIN_DISH ( main_dish ) VALUES ('Maple Salmon Filet'), ('AAA Grade Beef Striploin'), ('[ KIDS ] Cheese Pizza'), ('[ KIDS ] Pasta With Tomato Sauce');
 
 CREATE TABLE IF NOT EXISTS INVITE (
   invite_id TEXT PRIMARY KEY,
