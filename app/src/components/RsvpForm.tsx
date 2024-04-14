@@ -369,6 +369,13 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
                           >
                             <option>Maple Salmon Filet</option>
                             <option>AAA Grade Beef Striploin</option>
+                            { !!inviteData?.kids && (
+                                <>
+                                <option>[ KIDS ] Pasta</option>
+                                <option>[ KIDS ] Pizza</option>
+                                </>
+                              )
+                            }
                           </select>
                         </div>
                         <div className="flex flex-col gap-1 w-64">

@@ -21,7 +21,8 @@ CREATE TABLE IF NOT EXISTS INVITE (
   created_dt DATE,
   attending TEXT,
   song_request TEXT,
-  guest_count INTEGER
+  guest_count INTEGER,
+  kids INTEGER
 );
 CREATE TABLE IF NOT EXISTS INVITE_RSVP (
   invite_id TEXT,
