@@ -23,7 +23,7 @@ export default function Menu({pathname, menuImage}: {pathname:string, menuImage:
   const setClicked = (name: string) => {
     setTimeout(() => {
       setClickedState(name)
-    }, 250)
+    }, 100)
   } 
   const [clicked, setClickedState] = React.useState<string | null>(null)
 
@@ -49,7 +49,7 @@ export default function Menu({pathname, menuImage}: {pathname:string, menuImage:
         <div className="hidden md:flex justify-center md:gap-x-12">
           {navigation.map((item) => (
             <div className='relative'>
-            <a key={item.name} id={item.id} onClick={()=>setClicked(item.name)} href={item.href} className={classNames("text-sm  leading-6 text-gray-900", pathname === item.href && 'font-bold', clicked === item.name && 'font-bold')}>
+            <a key={item.name} id={item.id} onClick={()=>setClicked(item.name)} href={item.href} className={classNames("text-sm  leading-6 text-gray-900 hover:bg-rosette-300 hover:bg-opacity-30", pathname === item.href && 'font-bold', clicked === item.name && 'font-bold')}>
               {item.name}
             </a>
             {clicked === item.name && (<div className='border border-rosette-400 absolute inset-y-0 right-0 left-0 bg-rose-300 bg-opacity-30 rounded-lg justify-end items-center pr-2 flex -mr-6 -mx-3'>
@@ -90,8 +90,9 @@ export default function Menu({pathname, menuImage}: {pathname:string, menuImage:
                   <a
                     key={item.name}
                     id={`${item.id}-mobile`}
+                    onClick={()=>setClickedState(item.name)} 
                     href={item.href}
-                    className={classNames("-mx-3 block rounded-lg px-3 py-2 text-base leading-7 text-gray-900 hover:bg-rosette-100",
+                    className={classNames("-mx-3 block rounded-lg px-3 py-2 text-base leading-7 text-gray-900",
                       pathname === item.href && ' underline font-bold',
                       item.name === clicked && ' underline font-bold')}
                   >

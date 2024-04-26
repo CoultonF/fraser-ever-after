@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS INVITE (
   last_name TEXT,
   email TEXT,
   phone_number INTEGER,
-  created_dt DATE,
+  created_dt DATE DEFAULT CURRENT_DATE,
   attending TEXT,
   song_request TEXT,
   guest_count INTEGER,
@@ -39,11 +39,11 @@ CREATE TABLE IF NOT EXISTS RSVP (
   main_dish TEXT REFERENCES MAIN_DISH(main_dish),
   created_dt DATE DEFAULT CURRENT_DATE
   );
-INSERT INTO INVITE (
-    invite_id, first_name, last_name, email, phone_number, guest_count, created_dt
-  ) VALUES (
-    'fd0211d6-3e87-46d4-9376-12880296f670', 'Coulton', 'Fraser', 'cjrfraser@gmail.com', 4033055795,1,'2017-01-01'
-  );
+-- INSERT INTO INVITE (
+--     invite_id, first_name, last_name, email, phone_number, guest_count
+--   ) VALUES (
+--     'fd0211d6-3e87-46d4-9376-12880296f670', 'Coulton', 'Fraser', 'cjrfraser@gmail.com', 4033055795,1
+--   );
 
 CREATE TABLE IF NOT EXISTS QUESTIONS (
   trivia_id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -93,3 +93,33 @@ INSERT INTO CHOICES ( trivia_id, choice, is_answer ) VALUES
 (9, 'Bride', 1), (9, 'Groom', 0) ,
 (10, 'Bride', 0), (10, 'Groom', 1) ,
 (11, 'Bride', 0), (11, 'Groom', 1) ;
+
+
+CREATE TABLE IF NOT EXISTS RSVP_AUDIT (
+  audit_id INTEGER PRIMARY KEY AUTOINCREMENT,
+  rsvp_id INTEGER,
+  first_name TEXT,
+  last_name TEXT,
+  dietary_restrictions TEXT,
+  main_dish TEXT,
+  created_dt DATE DEFAULT CURRENT_DATE,
+  action VARCHAR(10),
+  timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TRIGGER RSVP_AUDIT_TRIGGER
+BEFORE INSERT ON RSVP
+FOR EACH ROW
+BEGIN
+    INSERT INTO RSVP_AUDIT (rsvp_id, first_name, last_name, dietary_restrictions, main_dish, created_dt, action)
+    VALUES (NEW.rsvp_id, NEW.first_name, NEW.last_name, NEW.dietary_restrictions, NEW.main_dish, NEW.created_dt, 'INSERT');
+END;
+
+
+CREATE TRIGGER RSVP_AUDIT_TRIGGER_UPDATE
+BEFORE UPDATE ON RSVP
+FOR EACH ROW
+BEGIN
+    INSERT INTO RSVP_AUDIT (rsvp_id, first_name, last_name, dietary_restrictions, main_dish, created_dt, action)
+    VALUES (OLD.rsvp_id, OLD.first_name, OLD.last_name, OLD.dietary_restrictions, OLD.main_dish, OLD.created_dt, 'UPDATE');
+END;

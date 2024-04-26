@@ -329,6 +329,24 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className='h-5 w-5 fill-rosette-700'><path d="M256 512A256 256 0 1 0 256 0a256 256 0 1 0 0 512zm0-384c13.3 0 24 10.7 24 24V264c0 13.3-10.7 24-24 24s-24-10.7-24-24V152c0-13.3 10.7-24 24-24zM224 352a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"/></svg>
                     Please fill out the missing fields that are required.</span>
                 )}
+<div className="flex items-center rounded-md justify-between gap-x-6 bg-rose-200 drop-shadow-sm px-6 py-2.5 sm:pr-3.5 lg:pl-8">
+      <p className="text-md w-full leading-6 text-black text-center font-bold">
+        Please R.S.V.P. by June 30th, 2024.
+      </p>
+    </div>
+              <div className="col-span-full flex flex-col gap-4 w-min-fit bg-white px-4 sm:px-10 py-4 mb-4">
+              <h3 className="col-span-full h-fit text-5xl mx-3 sm:mx-5 w-full text-center font-serif tracking-wide">You're Invited!</h3>
+              <div className='flex flex-col'>
+                <p className='tracking-widest lowercase text-base w-full text-center font-sans'>to the wedding of</p>
+                <p className='tracking-widest text-base w-full text-center font-sans'>Coulton Fraser & Stephanie Krieger</p>
+                <p className='tracking-widest text-base w-full text-center font-sans'>August 11, 2024</p>
+                <p className="w-full text-center px-auto text-sm lg:text-base font-sans tracking-widest">
+                  Flores & Pine, Calgary, Alberta
+                </p>
+              </div>
+              <p className='max-w-prose text-sm mx-auto text-center'>Ceremony will begin at 3pm, followed by dinner/reception and dance.</p>
+              <p className='max-w-prose text-sm mx-auto text-center'>We look forward to celebrating our love with you.</p>
+              </div>
               <h3 className="col-span-full h-fit text-xl ml-3 sm:ml-5">Invite Details</h3>
               <InviteDetails inviteData={inviteData} />
               <h3 className="col-span-full h-fit text-xl ml-3 sm:ml-5">Guest List</h3>
@@ -384,12 +402,12 @@ export const RsvpForm = ({ inviteData, guestData }: any) => {
                         </div>
                       </div>
                       {index !== 0 && (
-                        <div className="relative  inset-y-[15px]">
+                        <div className="relative pointer-events-none inset-y-[15px]">
                           <div className="relative inset-1 flex justify-center">
                             <button
                               type="button"
                               onClick={() => remove(index)}
-                              className="inline-flex items-center gap-x-1.5 active:bg-gray-100 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-slate-500 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                              className="inline-flex items-center pointer-events-auto gap-x-1.5 active:bg-gray-100 rounded-full bg-white px-3 py-1.5 text-sm font-semibold text-slate-500 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                             >
                               <svg
                                 xmlns="http://www.w3.org/2000/svg"
